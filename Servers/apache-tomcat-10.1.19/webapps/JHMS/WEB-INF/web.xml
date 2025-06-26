@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+         version="6.0">
+  
+  <!-- StudentManagementServlet のマッピング -->
+  <servlet>
+    <servlet-name>StudentManagementServlet</servlet-name>
+    <servlet-class>servlet.StudentManagementServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>StudentManagementServlet</servlet-name>
+    <url-pattern>/StudentManagementServlet</url-pattern>
+  </servlet-mapping>
+  
+  <!-- LoginServlet のマッピング -->
+  <servlet>
+    <servlet-name>LoginServlet</servlet-name>
+    <servlet-class>servlet.LoginServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>LoginServlet</servlet-name>
+    <url-pattern>/LoginServlet</url-pattern>
+  </servlet-mapping>
+  
+  <!-- LogoutServlet のマッピング -->
+  <servlet>
+    <servlet-name>LogoutServlet</servlet-name>
+    <servlet-class>servlet.LogoutServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>LogoutServlet</servlet-name>
+    <url-pattern>/LogoutServlet</url-pattern>
+  </servlet-mapping>
+  
+  <!-- StatusServlet のマッピング -->
+  <servlet>
+    <servlet-name>StatusServlet</servlet-name>
+    <servlet-class>servlet.StatusServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>StatusServlet</servlet-name>
+    <url-pattern>/StatusServlet</url-pattern>
+  </servlet-mapping>
+  
+  <!-- StudentSearchServlet のマッピング -->
+  <servlet>
+    <servlet-name>StudentSearchServlet</servlet-name>
+    <servlet-class>servlet.StudentSearchServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>StudentSearchServlet</servlet-name>
+    <url-pattern>/StudentSearchServlet</url-pattern>
+  </servlet-mapping>
+  
+  <!-- StudentServlet のマッピング -->
+  <servlet>
+    <servlet-name>StudentServlet</servlet-name>
+    <servlet-class>servlet.StudentServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>StudentServlet</servlet-name>
+    <url-pattern>/StudentServlet</url-pattern>
+  </servlet-mapping>
+  
+  <!-- セッション設定 -->
+  <session-config>
+    <session-timeout>30</session-timeout>
+  </session-config>
+  
+  <!-- ウェルカムファイル -->
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>login.html</welcome-file>
+  </welcome-file-list>
+  
+</web-app>
