@@ -380,21 +380,27 @@ h1 {
   </div>
 <% } %>
 
-    <form class="grid-form" action="#" method="get">
+    <form class="grid-form" action="StudentServlet" method="post">
+      <input type="hidden" name="action" value="searchStudents">
       <div class="grid-container">
         <div class="field">
           <label for="student_id">学生番号</label>
-          <input id="student_id" name="student_id" type="text" placeholder="例: 123456">
+          <input id="student_id" name="student_id" type="text" placeholder="例: 2023001">
         </div>
         <div class="field">
           <label for="class">クラス</label>
           <select id="class" name="class">
             <option value="">選択してください</option>
-            <% if (classList != null) { %>
-              <% for (String className : classList) { %>
+            <% 
+              java.util.List<String> classes = (java.util.List<String>) request.getAttribute("classes");
+              if (classes != null) { 
+                for (String className : classes) { 
+            %>
                 <option value="<%= className %>"><%= className %></option>
-              <% } %>
-            <% } %>
+            <% 
+                } 
+              } 
+            %>
           </select>
         </div>
         <div class="field">
@@ -402,18 +408,23 @@ h1 {
           <input id="number" name="number" type="text" placeholder="例: 16">
         </div>
         <div class="field">
-          <label for="name-reading">名前（カナ）</label>
-          <input id="name-reading" name="name-reading" type="text" placeholder="例: ヤマダタロウ">
+          <label for="name_reading">名前（カナ）</label>
+          <input id="name_reading" name="name_reading" type="text" placeholder="例: ヤマダタロウ">
         </div>
         <div class="field">
-          <label for="status">在籍状況</label>
-          <select id="status" name="enrollment-status">
+          <label for="enrollment_status">在籍状況</label>
+          <select id="enrollment_status" name="enrollment_status">
             <option value="">選択してください</option>
-            <% if (enrollmentStatusList != null) { %>
-              <% for (String status : enrollmentStatusList) { %>
+            <% 
+              java.util.List<String> enrollmentStatuss = (java.util.List<String>) request.getAttribute("enrollmentStatuss");
+              if (enrollmentStatuss != null) { 
+                for (String status : enrollmentStatuss) { 
+            %>
                 <option value="<%= status %>"><%= status %></option>
-              <% } %>
-            <% } %>
+            <% 
+                } 
+              } 
+            %>
           </select>
         </div>
         <div class="field">
@@ -426,36 +437,51 @@ h1 {
           </select>
         </div>
         <div class="field">
-          <label for="assistance">斡旋</label>
-          <select id="assistance" name="assistance">
+          <label for="mediation_status">斡旋</label>
+          <select id="mediation_status" name="mediation_status">
             <option value="">選択してください</option>
-            <% if (assistanceList != null) { %>
-              <% for (String assistance : assistanceList) { %>
+            <% 
+              java.util.List<String> assistanceTypes = (java.util.List<String>) request.getAttribute("assistanceTypes");
+              if (assistanceTypes != null) { 
+                for (String assistance : assistanceTypes) { 
+            %>
                 <option value="<%= assistance %>"><%= assistance %></option>
-              <% } %>
-            <% } %>
+            <% 
+                } 
+              } 
+            %>
           </select>
         </div>
         <div class="field">
-          <label for="first-choice">第一希望業種</label>
-          <select id="first-choice" name="first-choice">
+          <label for="desired_job_type_1st">第一希望業種</label>
+          <select id="desired_job_type_1st" name="desired_job_type_1st">
             <option value="">選択してください</option>
-            <% if (firstChoiceIndustryList != null) { %>
-              <% for (String industry : firstChoiceIndustryList) { %>
+            <% 
+              java.util.List<String> industries = (java.util.List<String>) request.getAttribute("industries");
+              if (industries != null) { 
+                for (String industry : industries) { 
+            %>
                 <option value="<%= industry %>"><%= industry %></option>
-              <% } %>
-            <% } %>
+            <% 
+                } 
+              } 
+            %>
           </select>
         </div>
         <div class="field">
-          <label for="graduation-year">卒業年</label>
-          <select id="graduation-year" name="graduation-year">
+          <label for="graduation_year">卒業年</label>
+          <select id="graduation_year" name="graduation_year">
             <option value="">選択してください</option>
-            <% if (graduationYearList != null) { %>
-              <% for (Integer year : graduationYearList) { %>
+            <% 
+              java.util.List<String> graduationYears = (java.util.List<String>) request.getAttribute("graduationYears");
+              if (graduationYears != null) { 
+                for (String year : graduationYears) { 
+            %>
                 <option value="<%= year %>"><%= year %></option>
-              <% } %>
-            <% } %>
+            <% 
+                } 
+              } 
+            %>
           </select>
         </div>
       </div>
@@ -464,6 +490,58 @@ h1 {
         <button type="reset">クリア</button>
       </div>
     </form>
+
+    <%-- 検索結果の表示 --%>
+    <% 
+      java.util.List<java.util.List<String>> students = (java.util.List<java.util.List<String>>) request.getAttribute("students");
+      if (students != null && !students.isEmpty()) { 
+    %>
+    <div style="margin-top: 2rem;">
+      <h3>検索結果</h3>
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+          <thead>
+            <tr style="background-color: #4a90e2; color: white;">
+              <th style="padding: 0.5rem; border: 1px solid #ddd;">学生番号</th>
+              <th style="padding: 0.5rem; border: 1px solid #ddd;">クラス</th>
+              <th style="padding: 0.5rem; border: 1px solid #ddd;">クラス番号</th>
+              <th style="padding: 0.5rem; border: 1px solid #ddd;">名前</th>
+              <th style="padding: 0.5rem; border: 1px solid #ddd;">名前（カナ）</th>
+              <th style="padding: 0.5rem; border: 1px solid #ddd;">性別</th>
+              <th style="padding: 0.5rem; border: 1px solid #ddd;">在籍状況</th>
+              <th style="padding: 0.5rem; border: 1px solid #ddd;">斡旋</th>
+              <th style="padding: 0.5rem; border: 1px solid #ddd;">第一希望業種</th>
+              <th style="padding: 0.5rem; border: 1px solid #ddd;">卒業年</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% 
+              int studentCount = students.get(0).size(); // 学生番号のリストのサイズ
+              for (int i = 0; i < studentCount; i++) { 
+            %>
+            <tr style="background-color: <%= i % 2 == 0 ? "#f9f9f9" : "white" %>;">
+              <td style="padding: 0.5rem; border: 1px solid #ddd;"><%= students.get(0).get(i) %></td>
+              <td style="padding: 0.5rem; border: 1px solid #ddd;"><%= students.get(1).get(i) %></td>
+              <td style="padding: 0.5rem; border: 1px solid #ddd;"><%= students.get(2).get(i) %></td>
+              <td style="padding: 0.5rem; border: 1px solid #ddd;"><%= students.get(3).get(i) %></td>
+              <td style="padding: 0.5rem; border: 1px solid #ddd;"><%= students.get(4).get(i) %></td>
+              <td style="padding: 0.5rem; border: 1px solid #ddd;"><%= students.get(5).get(i) %></td>
+              <td style="padding: 0.5rem; border: 1px solid #ddd;"><%= students.get(6).get(i) %></td>
+              <td style="padding: 0.5rem; border: 1px solid #ddd;"><%= students.get(7).get(i) %></td>
+              <td style="padding: 0.5rem; border: 1px solid #ddd;"><%= students.get(8).get(i) %></td>
+              <td style="padding: 0.5rem; border: 1px solid #ddd;"><%= students.get(9).get(i) %></td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin-top: 1rem; color: #666;">検索結果: <%= studentCount %>件</p>
+    </div>
+    <% } else if (students != null && students.isEmpty()) { %>
+    <div style="margin-top: 2rem; text-align: center; color: #666;">
+      <p>検索条件に一致する学生が見つかりませんでした。</p>
+    </div>
+    <% } %>
 </section>
 </main>
 <!-- ここまで機能部分を記述 -->

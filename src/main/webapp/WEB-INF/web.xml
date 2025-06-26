@@ -26,4 +26,14 @@
     <url-pattern>/LoginServlet</url-pattern>
   </servlet-mapping>
   
+  <servlet>
+    <servlet-name>StudentServlet</servlet-name>
+    <servlet-class>servlet.StudentServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>StudentServlet</servlet-name>
+    <url-pattern>/StudentServlet</url-pattern>
+  </servlet-mapping>
+  
 </web-app>
