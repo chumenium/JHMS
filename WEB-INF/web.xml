@@ -78,7 +78,7 @@
   
   <servlet-mapping>
     <servlet-name>CompanyManagementController</servlet-name>
-    <url-pattern>/CompanyManagementController</url-pattern>
+    <url-pattern>/companyManagement</url-pattern>
   </servlet-mapping>
   
   <!-- セッション設定 -->

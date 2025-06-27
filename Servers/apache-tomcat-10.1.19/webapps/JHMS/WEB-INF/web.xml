@@ -70,6 +70,17 @@
     <url-pattern>/StudentServlet</url-pattern>
   </servlet-mapping>
   
+  <!-- CompanyManagementController のマッピング -->
+  <servlet>
+    <servlet-name>CompanyManagementController</servlet-name>
+    <servlet-class>controller.CompanyManagementController</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>CompanyManagementController</servlet-name>
+    <url-pattern>/companyManagement</url-pattern>
+  </servlet-mapping>
+  
   <!-- セッション設定 -->
   <session-config>
     <session-timeout>30</session-timeout>
