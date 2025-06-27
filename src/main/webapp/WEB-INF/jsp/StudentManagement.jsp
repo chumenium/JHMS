@@ -54,37 +54,85 @@
 <link rel="stylesheet" href="css/style.css">
 
 <style>
-    /* 学生管理画面全体 */
+    /* 学生管理画面全体 - ダッシュボードスタイルを参考 */
+    .student-management-page {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+    }
+
+    .student-management-page::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('images/bg_pattern3.png') repeat;
+        opacity: 0.05;
+        z-index: 0;
+    }
+
     .student-management-container {
         max-width: 1200px;
         margin: 0 auto;
         padding: 20px;
+        position: relative;
+        z-index: 1;
         min-height: 100vh;
     }
 
-    /* ページヘッダー */
+    /* ページヘッダー - ダッシュボードヘッダーを参考 */
     .page-header {
         background: rgba(255, 255, 255, 0.95);
         border-radius: 15px;
-        padding: 30px;
-        margin-bottom: 40px;
+        padding: 20px;
+        margin-bottom: 30px;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.2);
         text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .page-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(45deg, var(--primary-color), #5CA564);
     }
 
     .page-title {
         font-size: 2.5rem;
-        color: #2C7744;
+        color: var(--primary-color);
         margin-bottom: 10px;
         font-weight: bold;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        position: relative;
+    }
+
+    .page-title::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 50px;
+        height: 3px;
+        background: linear-gradient(45deg, var(--primary-color), #5CA564);
+        border-radius: 2px;
     }
 
     .page-subtitle {
         font-size: 1.1rem;
         color: #666;
         margin-bottom: 20px;
+        line-height: 1.6;
     }
 
     .breadcrumb {
@@ -94,35 +142,130 @@
         gap: 10px;
         font-size: 0.9rem;
         color: #888;
+        margin-top: 15px;
     }
 
     .breadcrumb a {
-        color: #2C7744;
+        color: var(--primary-color);
         text-decoration: none;
-        transition: color 0.3s ease;
+        transition: all 0.3s ease;
+        padding: 5px 12px;
+        border-radius: 15px;
+        background: rgba(44, 119, 68, 0.1);
     }
 
     .breadcrumb a:hover {
         color: #5CA564;
+        background: rgba(44, 119, 68, 0.2);
+        transform: translateY(-2px);
     }
 
     .breadcrumb .separator {
         color: #ccc;
+        font-weight: bold;
     }
 
-    /* メインコンテンツ */
+    /* クイックアクション - ダッシュボードスタイルを参考 */
+    .quick-actions {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        margin-bottom: 30px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .quick-actions::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+    }
+
+    .quick-actions h3 {
+        font-size: 1.3rem;
+        color: var(--primary-color);
+        margin-bottom: 20px;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .action-buttons {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+    }
+
+    .action-btn {
+        background: linear-gradient(45deg, var(--primary-color), #5CA564);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 15px;
+        text-decoration: none;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+        box-shadow: 0 5px 15px rgba(44, 119, 68, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .action-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    .action-btn:hover::before {
+        left: 100%;
+    }
+
+    .action-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(44, 119, 68, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+
+    .action-btn.secondary {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .action-btn.secondary:hover {
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    /* メインコンテンツ - ダッシュボードのfeature-cardを参考 */
     .management-main {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-        gap: 30px;
-        margin-bottom: 40px;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+        margin-bottom: 30px;
     }
 
-    /* 機能カード */
+    /* 機能カード - ダッシュボードのfeature-cardを参考 */
     .management-card {
         background: rgba(255, 255, 255, 0.95);
-        border-radius: 20px;
-        padding: 40px 30px;
+        border-radius: 15px;
+        padding: 25px;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.2);
@@ -138,68 +281,115 @@
         top: 0;
         left: 0;
         right: 0;
-        height: 5px;
-        background: linear-gradient(45deg, #2C7744, #5CA564);
+        height: 4px;
+        background: linear-gradient(45deg, var(--primary-color), #5CA564);
+    }
+
+    .management-card::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(44, 119, 68, 0.1) 0%, transparent 70%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+    }
+
+    .management-card:hover::after {
+        opacity: 1;
     }
 
     .management-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
     }
 
     .card-icon {
-        font-size: 4rem;
-        margin-bottom: 20px;
+        font-size: 3rem;
+        margin-bottom: 15px;
         display: block;
-        background: linear-gradient(45deg, #2C7744, #5CA564);
+        background: linear-gradient(45deg, var(--primary-color), #5CA564);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
+        filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.1));
     }
 
     .card-title {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
         font-weight: bold;
         color: #333;
-        margin-bottom: 15px;
+        margin-bottom: 10px;
+        position: relative;
+    }
+
+    .card-title::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 30px;
+        height: 2px;
+        background: linear-gradient(45deg, var(--primary-color), #5CA564);
+        border-radius: 1px;
     }
 
     .card-description {
         color: #666;
-        margin-bottom: 25px;
-        line-height: 1.6;
+        margin-bottom: 20px;
+        line-height: 1.5;
+        font-size: 0.95rem;
     }
 
     .card-stats {
         display: flex;
         justify-content: space-around;
-        margin-bottom: 25px;
+        margin-bottom: 20px;
         padding: 15px;
-        background: rgba(44, 119, 68, 0.05);
+        background: linear-gradient(135deg, rgba(44, 119, 68, 0.05), rgba(92, 165, 100, 0.05));
         border-radius: 10px;
+        border: 1px solid rgba(44, 119, 68, 0.1);
     }
 
     .stat-item {
         text-align: center;
+        position: relative;
+    }
+
+    .stat-item:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        right: -50%;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 1px;
+        height: 25px;
+        background: linear-gradient(to bottom, transparent, rgba(44, 119, 68, 0.3), transparent);
     }
 
     .stat-number {
         font-size: 1.8rem;
         font-weight: bold;
-        color: #2C7744;
+        color: var(--primary-color);
         display: block;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
     }
 
     .stat-label {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
         color: #666;
         margin-top: 5px;
+        font-weight: 500;
     }
 
     .card-link {
-        background: linear-gradient(45deg, #2C7744, #5CA564);
+        background: linear-gradient(45deg, var(--primary-color), #5CA564);
         color: white;
-        padding: 15px 30px;
+        padding: 12px 25px;
         border-radius: 25px;
         text-decoration: none;
         font-weight: bold;
@@ -210,73 +400,59 @@
         width: 100%;
         text-align: center;
         box-sizing: border-box;
-        font-size: 1.1rem;
+        font-size: 1rem;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(44, 119, 68, 0.3);
+    }
+
+    .card-link::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    .card-link:hover::before {
+        left: 100%;
     }
 
     .card-link:hover {
         transform: translateY(-2px);
-        box-shadow: 0 10px 30px rgba(44, 119, 68, 0.3);
+        box-shadow: 0 8px 25px rgba(44, 119, 68, 0.4);
         color: white;
         text-decoration: none;
     }
 
-    /* クイックアクション */
-    .quick-actions {
-        background: rgba(255, 255, 255, 0.95);
-        border-radius: 15px;
-        padding: 30px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        margin-bottom: 30px;
+    /* レスポンシブ対応 - ダッシュボードと同様 */
+    @media screen and (max-width: 768px) {
+        .page-title {
+            font-size: 2rem;
+        }
+        
+        .management-main {
+            grid-template-columns: 1fr;
+        }
+        
+        .action-buttons {
+            grid-template-columns: 1fr;
+        }
+        
+        .card-stats {
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .stat-item:not(:last-child)::after {
+            display: none;
+        }
     }
 
-    .quick-actions h3 {
-        font-size: 1.3rem;
-        color: #2C7744;
-        margin-bottom: 20px;
-        text-align: center;
-    }
-
-    .action-buttons {
-        display: flex;
-        gap: 15px;
-        justify-content: center;
-        flex-wrap: wrap;
-    }
-
-    .action-btn {
-        background: linear-gradient(45deg, #2C7744, #5CA564);
-        color: white;
-        padding: 12px 25px;
-        border-radius: 20px;
-        text-decoration: none;
-        font-weight: bold;
-        transition: all 0.3s ease;
-        border: none;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 0.95rem;
-    }
-
-    .action-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(44, 119, 68, 0.3);
-        color: white;
-        text-decoration: none;
-    }
-
-    .action-btn.secondary {
-        background: linear-gradient(45deg, #6c757d, #495057);
-    }
-
-    .action-btn.secondary:hover {
-        box-shadow: 0 8px 25px rgba(108, 117, 125, 0.3);
-    }
-
-    /* アニメーション */
+    /* アニメーション効果 */
     @keyframes fadeInUp {
         from {
             opacity: 0;
@@ -288,45 +464,23 @@
         }
     }
 
+    .page-header,
+    .quick-actions,
     .management-card {
         animation: fadeInUp 0.6s ease forwards;
     }
 
     .management-card:nth-child(1) { animation-delay: 0.1s; }
     .management-card:nth-child(2) { animation-delay: 0.2s; }
-
-    /* レスポンシブ対応 */
-    @media (max-width: 768px) {
-        .student-management-container {
-            padding: 10px;
-        }
-        
-        .page-title {
-            font-size: 2rem;
-        }
-        
-        .management-main {
-            grid-template-columns: 1fr;
-        }
-        
-        .action-buttons {
-            flex-direction: column;
-            align-items: center;
-        }
-        
-        .action-btn {
-            width: 100%;
-            max-width: 300px;
-            justify-content: center;
-        }
-    }
+    .management-card:nth-child(3) { animation-delay: 0.3s; }
+    .management-card:nth-child(4) { animation-delay: 0.4s; }
 
     /* ダッシュボード用ヘッダー調整 */
     .student-management-page header {
         position: relative;
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(10px);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     }
 
     .student-management-page #mainimg {
@@ -341,9 +495,6 @@
 </head>
 <body class="student-management-page">
 <% 
-  String username = (String) session.getAttribute("username"); 
-  String role = (String) session.getAttribute("role"); 
-  
   // 権限名を日本語に変換
   String roleDisplay = "";
   switch(role) {
