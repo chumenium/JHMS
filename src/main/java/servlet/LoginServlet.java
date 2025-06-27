@@ -10,11 +10,11 @@ import java.sql.ResultSet;
 import java.util.Base64;
 
 import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import utils.DBConnection;
 
@@ -77,47 +77,51 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-    	request.setCharacterEncoding("UTF-8");
-    	response.setContentType("text/html; charset=UTF-8");
-    	String username = request.getParameter("student_id");
-    	String password = request.getParameter("password");
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
+        String id = request.getParameter("id");
+        String password = request.getParameter("password");
 
-    	try (Connection connection = DBConnection.getConnection()) {
-    	    // ソルトを取得
-    	    String saltQuery = "SELECT salt FROM users WHERE id = ?";
-    	    PreparedStatement saltStmt = connection.prepareStatement(saltQuery);
-    	    saltStmt.setString(1, username);
-    	    ResultSet saltRs = saltStmt.executeQuery();
+        try (Connection connection = DBConnection.getConnection()) {
+            // ソルトをデータベースから取得
+            String saltQuery = "SELECT salt FROM users WHERE id = ?";
+            PreparedStatement saltStmt = connection.prepareStatement(saltQuery);
+            saltStmt.setString(1, id);
+            ResultSet saltRs = saltStmt.executeQuery();
 
-    	    if (saltRs.next()) {
-    	        String salt = saltRs.getString("salt");
-    	        String hashedPassword = hashPassword(password, salt);
+            if (saltRs.next()) {
+                String salt = saltRs.getString("salt");
+                String hashedPassword = hashPassword(password, salt);
 
-    	        // ✅ 修正箇所：student_id → id
-    	        String query = "SELECT id, role FROM users WHERE id = ? AND password = ?";
-    	        PreparedStatement statement = connection.prepareStatement(query);
-    	        statement.setString(1, username);
-    	        statement.setString(2, hashedPassword);
+                String query = "SELECT name, id, role FROM users INNER JOIN students_tbl ON users.id = students_tbl.student_id WHERE id = ? AND password = ?";
+                PreparedStatement statement = connection.prepareStatement(query);
+                statement.setString(1, id);
+                statement.setString(2, hashedPassword);
 
-    	        ResultSet rs = statement.executeQuery();
+                ResultSet rs = statement.executeQuery();
 
-    	        if (rs.next()) {
-    	            ServletContext application = this.getServletContext();
-    	            application.setAttribute("id", rs.getString("id"));
-    	            application.setAttribute("role", rs.getString("role"));
+                if (rs.next()) {
+                	// LoginServlet#doPost(...)
+                	HttpSession session = request.getSession();  // セッションスコープ
+                	session.setAttribute("username", rs.getString("name"));
+                	session.setAttribute("id",       rs.getString("id"));
+                	session.setAttribute("role",     rs.getString("role"));
+                	// （アプリケーションスコープには何も置かない）
 
-    	            RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/index.jsp");
-    	            dispatcher.forward(request, response);
-    	        } else {
-    	            RequestDispatcher dispatcher = request.getRequestDispatcher("login.html");
-    	            dispatcher.forward(request, response);
-    	        }
-    	    } else {
-    	        RequestDispatcher dispatcher = request.getRequestDispatcher("login.html");
-    	        dispatcher.forward(request, response);
-    	    }
-    	} catch (Exception e) {
-    	    throw new ServletException(e);
-    	}
-    	}	
+
+                    RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/DashBoard.jsp");
+                    dispatcher.forward(request, response);
+                } else {
+                    RequestDispatcher dispatcher = request.getRequestDispatcher("login.html");
+                    dispatcher.forward(request, response);
+                }
+            } else {
+                RequestDispatcher dispatcher = request.getRequestDispatcher("login.html");
+                dispatcher.forward(request, response);
+            }
+        } catch (Exception e) {
+            throw new ServletException(e);
+        }
     }
+}
+	
