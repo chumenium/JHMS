@@ -1,397 +1,680 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<!--*
+：：：色のテーマは緑：：：
+企業管理画面
+
+**********
+
+<!--* 画面：企業管理画面
+        
+許可されている権限：
+・就職指導部：egd
+・システム管理者：admin
+ 
+▼▼▼▼
+*-->
+
+<!--確認まだ-->
+
+<!--KCS_JMS_PROJECT-->
+
+<!-- 企業管理画面用 -->
+
+<!--▼▼▼▼▼スコープから取得する情報　これをもとに判定をしていく -->
+<% 
+  String username = (String) session.getAttribute("username"); 
+  String role     = (String) session.getAttribute("role"); 
+%>
+<!--▲▲▲▲▲-->
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>企業管理画面</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
-    <style>
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #007bff;
-        }
-        
-        .header h1 {
-            color: #007bff;
-            margin: 0;
-        }
-        
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            margin: 5px;
-            font-size: 14px;
-        }
-        
-        .btn-primary {
-            background-color: #007bff;
-            color: white;
-        }
-        
-        .btn-success {
-            background-color: #28a745;
-            color: white;
-        }
-        
-        .btn-warning {
-            background-color: #ffc107;
-            color: #212529;
-        }
-        
-        .btn-danger {
-            background-color: #dc3545;
-            color: white;
-        }
-        
-        .btn-secondary {
-            background-color: #6c757d;
-            color: white;
-        }
-        
-        .search-form {
-            margin-bottom: 20px;
-            padding: 15px;
-            background-color: #f8f9fa;
-            border-radius: 5px;
-        }
-        
-        .search-form input[type="text"] {
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            width: 300px;
-            margin-right: 10px;
-        }
-        
-        .company-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            background-color: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        .company-table th,
-        .company-table td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        
-        .company-table th {
-            background-color: #007bff;
-            color: white;
-            font-weight: bold;
-        }
-        
-        .company-table tr:hover {
-            background-color: #f5f5f5;
-        }
-        
-        .form-container {
-            background-color: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-top: 20px;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #333;
-        }
-        
-        .form-group input[type="text"],
-        .form-group input[type="email"],
-        .form-group input[type="url"],
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-        
-        .form-group textarea {
-            height: 100px;
-            resize: vertical;
-        }
-        
-        .error-message {
-            color: #dc3545;
-            background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
-            padding: 10px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-        }
-        
-        .success-message {
-            color: #155724;
-            background-color: #d4edda;
-            border: 1px solid #c3e6cb;
-            padding: 10px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-        }
-        
-        .action-buttons {
-            text-align: center;
-            margin-top: 20px;
-        }
-        
-        .no-data {
-            text-align: center;
-            padding: 40px;
-            color: #666;
-            font-style: italic;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>企業管理画面</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="本アプリは就職対策アプリです。">
+<link rel="stylesheet" href="css/style.css">
+
+<!-- 企業管理画面用CSS -->
+<style>
+/*----------------------------------------------
+  カラー変数
+----------------------------------------------*/
+:root {
+  --primary: #4CAF50;
+  --primary-dark: #388E3C;
+  --bg: #fff;
+  --surface: #f5f7fa;
+  --border: #ddd;
+  --text: #333;
+  --success: #4CAF50;
+  --warning: #FF9800;
+  --danger: #F44336;
+}
+
+/*----------------------------------------------
+  ベースリセット
+----------------------------------------------*/
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+main {
+  max-width: 1200px;
+  padding: 2rem;
+  margin: 0 auto;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: var(--primary);
+  font-size: 2rem;
+}
+
+/*----------------------------------------------
+  検索フォーム
+----------------------------------------------*/
+.search-section {
+  background: var(--surface);
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.search-section h2 {
+  margin-top: 0;
+  color: var(--primary);
+  font-size: 1.3rem;
+}
+
+.grid-form .grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.field label {
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: var(--text);
+}
+
+.field input,
+.field select {
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.field input:focus,
+.field select:focus {
+  border-color: var(--primary);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+/*----------------------------------------------
+  ボタン
+----------------------------------------------*/
+.btn-wrap {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  margin: 0 0.5rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+  background: #e2e6ea;
+}
+
+.btn-success {
+  background: var(--success);
+  color: white;
+}
+
+.btn-warning {
+  background: var(--warning);
+  color: white;
+}
+
+.btn-danger {
+  background: var(--danger);
+  color: white;
+}
+
+/*----------------------------------------------
+  企業一覧テーブル
+----------------------------------------------*/
+.company-table {
+  width: 100%;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-bottom: 2rem;
+}
+
+.company-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.company-table th,
+.company-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.company-table th {
+  background: var(--primary);
+  color: white;
+  font-weight: bold;
+}
+
+.company-table tr:hover {
+  background: var(--surface);
+}
+
+.company-table .actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/*----------------------------------------------
+  モーダル
+----------------------------------------------*/
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+  background-color: white;
+  margin: 5% auto;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 600px;
+  position: relative;
+}
+
+.close {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #aaa;
+}
+
+.close:hover {
+  color: var(--text);
+}
+
+/*----------------------------------------------
+  レスポンシブ
+----------------------------------------------*/
+@media (max-width: 768px) {
+  .grid-form .grid-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .company-table {
+    font-size: 0.9rem;
+  }
+  
+  .company-table th,
+  .company-table td {
+    padding: 0.5rem;
+  }
+  
+  .company-table .actions {
+    flex-direction: column;
+  }
+  
+  .btn {
+    margin: 0.25rem;
+    padding: 0.5rem 1rem;
+  }
+}
+
+/* 権限チェック用スタイル */
+.permission-error {
+  text-align: center;
+  padding: 3rem;
+  color: var(--danger);
+  font-size: 1.2rem;
+}
+</style>
+
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>企業管理画面</h1>
-            <div>
-                <a href="CompanyManagementController?action=list" class="btn btn-primary">一覧表示</a>
-                <a href="CompanyManagementController?action=add" class="btn btn-success">新規追加</a>
-                <a href="DashBoard.jsp" class="btn btn-secondary">ダッシュボード</a>
-            </div>
+<div id="container">
+<!--▼▼▼▼▼ここから「ヘッダー」-->
+<header>
+<!-- ▼▼▼▼ 画面上部アイコン-->
+<h1 id="logo"><a href="index.html"><img src="images/logo.png" alt="jms"></a></h1>
+<!-- ▲▲▲▲ -->
+
+<!--ヘッダー上部分のリスト-->
+<nav>
+<ul>
+  <%-- ユーザ名・権限表示 --%>
+  <% if (username != null) { %>
+    <li>こんにちは、<%= username %>さん</li>
+    <li><%= username %>さんの権限は<%= role %>です</li>
+  <% } else { %>
+    <li><a href="login.html">ログイン</a></li>
+  <% } %>
+
+  <!--* 画面：学生管理画面
+        
+   許可されている権限：
+        
+   ・教員：teacher
+   ・校長・教務部長：headmaster
+   ・システム管理者：admin
+        
+    ▼▼▼▼
+    *-->
+  <% if ("teacher".equals(role) 
+         || "headmaster".equals(role) 
+         || "admin".equals(role)) { %>
+    <li>
+      <a href="StatusServlet?view=studentManagement">
+        📚 学生管理画面
+      </a>
+    </li>
+  <% } %>
+
+  <!--* 画面：企業管理画面
+        
+  許可されている権限：
+        
+  ・就職指導部：egd
+  ・システム管理者：admin
+        
+   ▼▼▼▼
+   *-->
+  <% if ("egd".equals(role) 
+         || "admin".equals(role)) { %>
+    <li>
+      <a href="StatusServlet?view=CompanyManagement">
+        🏢 企業管理画面
+      </a>
+    </li>
+  <% } %>
+
+   <!--* 画面：就職管理画面
+        
+     許可されている権限：
+        
+     ・教員：teacher
+     ・校長・教務部長：headmaster
+     ・就職指導部：egd
+     ・システム管理者：admin
+    ・学生： student
+        
+        
+   ▼▼▼▼
+   *-->
+  <% if ("teacher".equals(role) 
+         || "headmaster".equals(role) 
+         || "egd".equals(role) 
+         || "admin".equals(role) 
+         || "student".equals(role)) { %>
+    <li>
+      <a href="StatusServlet?view=jobHunting">
+        📄 就職管理画面
+      </a>
+    </li>
+  <% } %>
+
+  <!--* ログアウトボタン
+        
+   許可されている権限：
+        
+   ・すべての権限
+        
+   ▼▼▼▼
+   *-->
+  <% if (username != null) { %>
+    <li>
+      <a href="LogoutServlet">
+        🚪 ログアウト
+      </a>
+    </li>
+  <% } %>
+</ul>
+</nav>
+</header>
+<!--▲▲▲▲▲ここまで「ヘッダー」-->
+
+<main>
+  <h1>企業管理画面</h1>
+  <section class="search-section">
+    <h2>企業検索</h2>
+    <form class="grid-form">
+      <div class="grid-container">
+        <div class="field">
+          <label for="searchName">企業名</label>
+          <input type="text" id="searchName" name="searchName" placeholder="例：株式会社サンプル">
         </div>
-        
-        <!-- メッセージ表示 -->
-        <c:if test="${not empty message}">
-            <div class="success-message">${message}</div>
-        </c:if>
-        
-        <c:if test="${not empty errorMessage}">
-            <div class="error-message">${errorMessage}</div>
-        </c:if>
-        
-        <!-- 検索フォーム -->
-        <div class="search-form">
-            <form action="CompanyManagementController" method="GET">
-                <input type="hidden" name="action" value="search">
-                <input type="text" name="searchKeyword" placeholder="企業名で検索..." 
-                       value="${searchKeyword}" required>
-                <button type="submit" class="btn btn-primary">検索</button>
-            </form>
+        <div class="field">
+          <label for="searchIndustry">業界</label>
+          <select id="searchIndustry" name="searchIndustry">
+            <option value="">すべて</option>
+            <option value="IT">IT・ソフトウェア</option>
+            <option value="manufacturing">製造業</option>
+            <option value="finance">金融・保険</option>
+            <option value="retail">小売・流通</option>
+            <option value="service">サービス業</option>
+            <option value="construction">建設業</option>
+            <option value="medical">医療・福祉</option>
+            <option value="education">教育</option>
+            <option value="other">その他</option>
+          </select>
         </div>
-        
-        <!-- 企業追加・編集フォーム -->
-        <c:if test="${mode == 'add' || mode == 'edit'}">
-            <div class="form-container">
-                <h2>${mode == 'add' ? '企業追加' : '企業編集'}</h2>
-                <form action="CompanyManagementController" method="POST">
-                    <input type="hidden" name="action" value="${mode == 'add' ? 'add' : 'update'}">
-                    <c:if test="${mode == 'edit'}">
-                        <input type="hidden" name="companyId" value="${company.companyId}">
-                    </c:if>
-                    
-                    <div class="form-group">
-                        <label for="companyName">企業名 *</label>
-                        <input type="text" id="companyName" name="companyName" 
-                               value="${company.companyName}" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="industry">業種 *</label>
-                        <select id="industry" name="industry" required>
-                            <option value="">選択してください</option>
-                            <option value="IT・ソフトウェア" ${company.industry == 'IT・ソフトウェア' ? 'selected' : ''}>IT・ソフトウェア</option>
-                            <option value="製造業" ${company.industry == '製造業' ? 'selected' : ''}>製造業</option>
-                            <option value="金融・保険" ${company.industry == '金融・保険' ? 'selected' : ''}>金融・保険</option>
-                            <option value="建設業" ${company.industry == '建設業' ? 'selected' : ''}>建設業</option>
-                            <option value="小売・流通" ${company.industry == '小売・流通' ? 'selected' : ''}>小売・流通</option>
-                            <option value="サービス業" ${company.industry == 'サービス業' ? 'selected' : ''}>サービス業</option>
-                            <option value="その他" ${company.industry == 'その他' ? 'selected' : ''}>その他</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="location">所在地 *</label>
-                        <input type="text" id="location" name="location" 
-                               value="${company.location}" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="contactPerson">担当者 *</label>
-                        <input type="text" id="contactPerson" name="contactPerson" 
-                               value="${company.contactPerson}" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="phone">電話番号 *</label>
-                        <input type="text" id="phone" name="phone" 
-                               value="${company.phone}" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="email">メールアドレス</label>
-                        <input type="email" id="email" name="email" 
-                               value="${company.email}">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="website">Webサイト</label>
-                        <input type="url" id="website" name="website" 
-                               value="${company.website}">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="description">企業説明</label>
-                        <textarea id="description" name="description">${company.description}</textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="status">ステータス *</label>
-                        <select id="status" name="status" required>
-                            <option value="">選択してください</option>
-                            <option value="アクティブ" ${company.status == 'アクティブ' ? 'selected' : ''}>アクティブ</option>
-                            <option value="非アクティブ" ${company.status == '非アクティブ' ? 'selected' : ''}>非アクティブ</option>
-                            <option value="保留" ${company.status == '保留' ? 'selected' : ''}>保留</option>
-                        </select>
-                    </div>
-                    
-                    <div class="action-buttons">
-                        <button type="submit" class="btn btn-success">
-                            ${mode == 'add' ? '追加' : '更新'}
-                        </button>
-                        <a href="CompanyManagementController?action=list" class="btn btn-secondary">キャンセル</a>
-                    </div>
-                </form>
-            </div>
-        </c:if>
-        
-        <!-- 企業一覧テーブル -->
-        <c:if test="${mode != 'add' && mode != 'edit'}">
-            <c:choose>
-                <c:when test="${not empty companies}">
-                    <table class="company-table">
-                        <thead>
-                            <tr>
-                                <th>企業ID</th>
-                                <th>企業名</th>
-                                <th>業種</th>
-                                <th>所在地</th>
-                                <th>担当者</th>
-                                <th>電話番号</th>
-                                <th>ステータス</th>
-                                <th>操作</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <c:forEach var="company" items="${companies}">
-                                <tr>
-                                    <td>${company.companyId}</td>
-                                    <td>${company.companyName}</td>
-                                    <td>${company.industry}</td>
-                                    <td>${company.location}</td>
-                                    <td>${company.contactPerson}</td>
-                                    <td>${company.phone}</td>
-                                    <td>${company.status}</td>
-                                    <td>
-                                        <a href="CompanyManagementController?action=edit&id=${company.companyId}" 
-                                           class="btn btn-warning">編集</a>
-                                        <a href="CompanyManagementController?action=delete&id=${company.companyId}" 
-                                           class="btn btn-danger" 
-                                           onclick="return confirm('本当に削除しますか？')">削除</a>
-                                    </td>
-                                </tr>
-                            </c:forEach>
-                        </tbody>
-                    </table>
-                </c:when>
-                <c:otherwise>
-                    <div class="no-data">
-                        <c:choose>
-                            <c:when test="${not empty searchKeyword}">
-                                検索条件「${searchKeyword}」に一致する企業が見つかりませんでした。
-                            </c:when>
-                            <c:otherwise>
-                                登録されている企業がありません。
-                            </c:otherwise>
-                        </c:choose>
-                    </div>
-                </c:otherwise>
-            </c:choose>
-        </c:if>
-    </div>
-    
-    <script>
-        // フォームのバリデーション
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.querySelector('form');
-            if (form) {
-                form.addEventListener('submit', function(e) {
-                    const companyName = document.getElementById('companyName');
-                    const industry = document.getElementById('industry');
-                    const location = document.getElementById('location');
-                    const contactPerson = document.getElementById('contactPerson');
-                    const phone = document.getElementById('phone');
-                    const status = document.getElementById('status');
-                    
-                    if (!companyName.value.trim()) {
-                        alert('企業名を入力してください。');
-                        e.preventDefault();
-                        return;
-                    }
-                    
-                    if (!industry.value) {
-                        alert('業種を選択してください。');
-                        e.preventDefault();
-                        return;
-                    }
-                    
-                    if (!location.value.trim()) {
-                        alert('所在地を入力してください。');
-                        e.preventDefault();
-                        return;
-                    }
-                    
-                    if (!contactPerson.value.trim()) {
-                        alert('担当者を入力してください。');
-                        e.preventDefault();
-                        return;
-                    }
-                    
-                    if (!phone.value.trim()) {
-                        alert('電話番号を入力してください。');
-                        e.preventDefault();
-                        return;
-                    }
-                    
-                    if (!status.value) {
-                        alert('ステータスを選択してください。');
-                        e.preventDefault();
-                        return;
-                    }
-                });
-            }
-        });
-    </script>
+        <div class="field">
+          <label for="searchStatus">採用状況</label>
+          <select id="searchStatus" name="searchStatus">
+            <option value="">すべて</option>
+            <option value="active">採用中</option>
+            <option value="inactive">採用終了</option>
+            <option value="planning">採用予定</option>
+          </select>
+        </div>
+      </div>
+      <div class="btn-wrap">
+        <button type="submit" class="btn btn-primary">検索</button>
+        <button type="button" onclick="openAddModal()" class="btn btn-success">新規登録</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="company-table">
+    <table>
+      <thead>
+        <tr>
+          <th>企業名</th>
+          <th>業界</th>
+          <th>所在地</th>
+          <th>電話番号</th>
+          <th>採用状況</th>
+          <th>登録日</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>株式会社サンプルIT</td>
+          <td>IT・ソフトウェア</td>
+          <td>東京都</td>
+          <td>03-1234-5678</td>
+          <td><span style="color: var(--success);">採用中</span></td>
+          <td>2024-01-15</td>
+          <td class="actions">
+            <button onclick="openEditModal(1)" class="btn btn-warning">編集</button>
+            <button onclick="deleteCompany(1)" class="btn btn-danger">削除</button>
+          </td>
+        </tr>
+        <tr>
+          <td>サンプル製造株式会社</td>
+          <td>製造業</td>
+          <td>大阪府</td>
+          <td>06-9876-5432</td>
+          <td><span style="color: var(--warning);">採用予定</span></td>
+          <td>2024-01-10</td>
+          <td class="actions">
+            <button onclick="openEditModal(2)" class="btn btn-warning">編集</button>
+            <button onclick="deleteCompany(2)" class="btn btn-danger">削除</button>
+          </td>
+        </tr>
+        <tr>
+          <td>サンプル金融銀行</td>
+          <td>金融・保険</td>
+          <td>愛知県</td>
+          <td>052-5555-1234</td>
+          <td><span style="color: var(--danger);">採用終了</span></td>
+          <td>2024-01-05</td>
+          <td class="actions">
+            <button onclick="openEditModal(3)" class="btn btn-warning">編集</button>
+            <button onclick="deleteCompany(3)" class="btn btn-danger">削除</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</main>
+
+<!-- 企業登録・編集モーダル -->
+<div id="companyModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <h2 id="modalTitle">企業登録</h2>
+    <form id="companyForm" method="POST" action="CompanyServlet">
+      <input type="hidden" id="companyId" name="companyId">
+      <input type="hidden" id="formAction" name="action" value="add">
+      
+      <div class="grid-container">
+        <div class="field">
+          <label for="modalCompanyName">企業名 *</label>
+          <input type="text" id="modalCompanyName" name="companyName" required>
+        </div>
+        <div class="field">
+          <label for="modalIndustry">業界 *</label>
+          <select id="modalIndustry" name="industry" required>
+            <option value="">業界を選択</option>
+            <option value="IT">IT・ソフトウェア</option>
+            <option value="manufacturing">製造業</option>
+            <option value="finance">金融・保険</option>
+            <option value="retail">小売・流通</option>
+            <option value="service">サービス業</option>
+            <option value="construction">建設業</option>
+            <option value="medical">医療・福祉</option>
+            <option value="education">教育</option>
+            <option value="other">その他</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="modalLocation">所在地 *</label>
+          <input type="text" id="modalLocation" name="location" required>
+        </div>
+        <div class="field">
+          <label for="modalPhone">電話番号</label>
+          <input type="tel" id="modalPhone" name="phone" placeholder="03-1234-5678">
+        </div>
+        <div class="field">
+          <label for="modalEmail">メールアドレス</label>
+          <input type="email" id="modalEmail" name="email" placeholder="example@company.com">
+        </div>
+        <div class="field">
+          <label for="modalStatus">採用状況 *</label>
+          <select id="modalStatus" name="status" required>
+            <option value="active">採用中</option>
+            <option value="inactive">採用終了</option>
+            <option value="planning">採用予定</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="modalWebsite">Webサイト</label>
+          <input type="url" id="modalWebsite" name="website" placeholder="https://example.com">
+        </div>
+        <div class="field">
+          <label for="modalDescription">企業説明</label>
+          <textarea id="modalDescription" name="description" rows="4" placeholder="企業の特徴や事業内容を入力してください"></textarea>
+        </div>
+      </div>
+      
+      <div class="btn-wrap">
+        <button type="submit" class="btn btn-primary">保存</button>
+        <button type="button" onclick="closeModal()" class="btn btn-secondary">キャンセル</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- JavaScript -->
+<script>
+// モーダル制御
+function openAddModal() {
+  document.getElementById('modalTitle').textContent = '企業登録';
+  document.getElementById('formAction').value = 'add';
+  document.getElementById('companyForm').reset();
+  document.getElementById('companyModal').style.display = 'block';
+}
+
+function openEditModal(companyId) {
+  document.getElementById('modalTitle').textContent = '企業編集';
+  document.getElementById('formAction').value = 'edit';
+  document.getElementById('companyId').value = companyId;
+  
+  // サンプルデータ（実際の実装ではAjaxでデータを取得）
+  const sampleData = {
+    1: {
+      companyName: '株式会社サンプルIT',
+      industry: 'IT',
+      location: '東京都',
+      phone: '03-1234-5678',
+      email: 'info@sampleit.co.jp',
+      status: 'active',
+      website: 'https://sampleit.co.jp',
+      description: 'ITソリューションを提供する企業です。'
+    },
+    2: {
+      companyName: 'サンプル製造株式会社',
+      industry: 'manufacturing',
+      location: '大阪府',
+      phone: '06-9876-5432',
+      email: 'contact@sample-manufacturing.co.jp',
+      status: 'planning',
+      website: 'https://sample-manufacturing.co.jp',
+      description: '製造業を営む企業です。'
+    },
+    3: {
+      companyName: 'サンプル金融銀行',
+      industry: 'finance',
+      location: '愛知県',
+      phone: '052-5555-1234',
+      email: 'hr@sample-bank.co.jp',
+      status: 'inactive',
+      website: 'https://sample-bank.co.jp',
+      description: '金融サービスを提供する銀行です。'
+    }
+  };
+  
+  const data = sampleData[companyId];
+  if (data) {
+    document.getElementById('modalCompanyName').value = data.companyName;
+    document.getElementById('modalIndustry').value = data.industry;
+    document.getElementById('modalLocation').value = data.location;
+    document.getElementById('modalPhone').value = data.phone;
+    document.getElementById('modalEmail').value = data.email;
+    document.getElementById('modalStatus').value = data.status;
+    document.getElementById('modalWebsite').value = data.website;
+    document.getElementById('modalDescription').value = data.description;
+  }
+  
+  document.getElementById('companyModal').style.display = 'block';
+}
+
+function closeModal() {
+  document.getElementById('companyModal').style.display = 'none';
+}
+
+function deleteCompany(companyId) {
+  if (confirm('この企業を削除してもよろしいですか？')) {
+    // 実際の実装ではAjaxで削除処理を実行
+    alert('企業ID: ' + companyId + ' を削除しました。');
+    location.reload();
+  }
+}
+
+// モーダル外クリックで閉じる
+window.onclick = function(event) {
+  const modal = document.getElementById('companyModal');
+  if (event.target == modal) {
+    closeModal();
+  }
+}
+
+// フォーム送信時の処理
+document.getElementById('companyForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  // 実際の実装ではAjaxでフォームデータを送信
+  const formData = new FormData(this);
+  const action = formData.get('action');
+  
+  if (action === 'add') {
+    alert('企業を登録しました。');
+  } else if (action === 'edit') {
+    alert('企業情報を更新しました。');
+  }
+  
+  closeModal();
+  location.reload();
+});
+</script>
+
+<% } %>
+
+</div>
 </body>
-</html> 
+</html>

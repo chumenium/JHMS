@@ -46,6 +46,7 @@
 <!--▲▲▲▲▲-->
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -380,7 +381,7 @@ h1 {
   </div>
 <% } %>
 
-    <form class="grid-form" action="#" method="get">
+    <form class="grid-form" action="StudentSearchServlet" method="post">
       <div class="grid-container">
         <div class="field">
           <label for="student_id">学生番号</label>
@@ -390,11 +391,9 @@ h1 {
           <label for="class">クラス</label>
           <select id="class" name="class">
             <option value="">選択してください</option>
-            <% if (classList != null) { %>
-              <% for (String className : classList) { %>
-                <option value="<%= className %>"><%= className %></option>
-              <% } %>
-            <% } %>
+            <c:forEach var="classVal" items="${classes}">
+              <option value="${classVal}">${classVal}</option>
+            </c:forEach>
           </select>
         </div>
         <div class="field">
@@ -409,11 +408,9 @@ h1 {
           <label for="status">在籍状況</label>
           <select id="status" name="enrollment-status">
             <option value="">選択してください</option>
-            <% if (enrollmentStatusList != null) { %>
-              <% for (String status : enrollmentStatusList) { %>
-                <option value="<%= status %>"><%= status %></option>
-              <% } %>
-            <% } %>
+            <c:forEach var="status" items="${statuses}">
+              <option value="${status}">${status}</option>
+            </c:forEach>
           </select>
         </div>
         <div class="field">
@@ -429,33 +426,27 @@ h1 {
           <label for="assistance">斡旋</label>
           <select id="assistance" name="assistance">
             <option value="">選択してください</option>
-            <% if (assistanceList != null) { %>
-              <% for (String assistance : assistanceList) { %>
-                <option value="<%= assistance %>"><%= assistance %></option>
-              <% } %>
-            <% } %>
+            <c:forEach var="mediation" items="${mediations}">
+              <option value="${mediation}">${mediation}</option>
+            </c:forEach>
           </select>
         </div>
         <div class="field">
           <label for="first-choice">第一希望業種</label>
           <select id="first-choice" name="first-choice">
             <option value="">選択してください</option>
-            <% if (firstChoiceIndustryList != null) { %>
-              <% for (String industry : firstChoiceIndustryList) { %>
-                <option value="<%= industry %>"><%= industry %></option>
-              <% } %>
-            <% } %>
+            <c:forEach var="industry" items="${industries}">
+              <option value="${industry}">${industry}</option>
+            </c:forEach>
           </select>
         </div>
         <div class="field">
           <label for="graduation-year">卒業年</label>
           <select id="graduation-year" name="graduation-year">
             <option value="">選択してください</option>
-            <% if (graduationYearList != null) { %>
-              <% for (Integer year : graduationYearList) { %>
-                <option value="<%= year %>"><%= year %></option>
-              <% } %>
-            <% } %>
+            <c:forEach var="year" items="${years}">
+              <option value="${year}">${year}</option>
+            </c:forEach>
           </select>
         </div>
       </div>
