@@ -109,18 +109,20 @@ public class LoginServlet extends HttpServlet {
                 	// （アプリケーションスコープには何も置かない）
 
 
-                    RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/dashboard.jsp");
+                    RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/DashBoard.jsp");
                     dispatcher.forward(request, response);
                 } else {
-                    RequestDispatcher dispatcher = request.getRequestDispatcher("login.html");
-                    dispatcher.forward(request, response);
+                    // ログイン失敗時はエラーページにリダイレクト
+                    response.sendRedirect("error/login-failed.html?type=invalid_credentials");
                 }
             } else {
-                RequestDispatcher dispatcher = request.getRequestDispatcher("login.html");
-                dispatcher.forward(request, response);
+                // ユーザーIDが存在しない場合
+                response.sendRedirect("error/login-failed.html?type=invalid_credentials");
             }
         } catch (Exception e) {
-            throw new ServletException(e);
+            e.printStackTrace();
+            // データベースエラーの場合
+            response.sendRedirect("error/login-failed.html?type=database_error");
         }
     }
 }
