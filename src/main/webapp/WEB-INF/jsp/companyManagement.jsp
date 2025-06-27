@@ -1,3 +1,5 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <!--*
 ：：：色のテーマは緑：：：
 企業管理画面
@@ -26,8 +28,6 @@
 %>
 <!--▲▲▲▲▲-->
 
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -406,20 +406,32 @@ h1 {
 </header>
 <!--▲▲▲▲▲ここまで「ヘッダー」-->
 
+<!-- 権限チェック -->
+<% if (!"egd".equals(role) && !"admin".equals(role)) { %>
+  <div class="permission-error">
+    <h2>アクセス権限がありません</h2>
+    <p>企業管理画面にアクセスするには、就職指導部またはシステム管理者の権限が必要です。</p>
+    <a href="StatusServlet?view=dashboard" class="btn btn-primary">ダッシュボードに戻る</a>
+  </div>
+<% } else { %>
+
 <main>
-  <h1>企業管理画面</h1>
+  <h1>🏢 企業管理画面</h1>
+
+  <!-- 検索セクション -->
   <section class="search-section">
-    <h2>企業検索</h2>
-    <form class="grid-form">
+    <h2>🔍 企業検索</h2>
+    <form class="grid-form" method="GET" action="CompanyServlet">
+      <input type="hidden" name="action" value="search">
       <div class="grid-container">
         <div class="field">
-          <label for="searchName">企業名</label>
-          <input type="text" id="searchName" name="searchName" placeholder="例：株式会社サンプル">
+          <label for="companyName">企業名</label>
+          <input type="text" id="companyName" name="companyName" placeholder="企業名を入力">
         </div>
         <div class="field">
-          <label for="searchIndustry">業界</label>
-          <select id="searchIndustry" name="searchIndustry">
-            <option value="">すべて</option>
+          <label for="industry">業界</label>
+          <select id="industry" name="industry">
+            <option value="">すべての業界</option>
             <option value="IT">IT・ソフトウェア</option>
             <option value="manufacturing">製造業</option>
             <option value="finance">金融・保険</option>
@@ -432,8 +444,12 @@ h1 {
           </select>
         </div>
         <div class="field">
-          <label for="searchStatus">採用状況</label>
-          <select id="searchStatus" name="searchStatus">
+          <label for="location">所在地</label>
+          <input type="text" id="location" name="location" placeholder="都道府県を入力">
+        </div>
+        <div class="field">
+          <label for="status">採用状況</label>
+          <select id="status" name="status">
             <option value="">すべて</option>
             <option value="active">採用中</option>
             <option value="inactive">採用終了</option>
@@ -443,11 +459,17 @@ h1 {
       </div>
       <div class="btn-wrap">
         <button type="submit" class="btn btn-primary">検索</button>
-        <button type="button" onclick="openAddModal()" class="btn btn-success">新規登録</button>
+        <button type="reset" class="btn btn-secondary">リセット</button>
       </div>
     </form>
   </section>
 
+  <!-- 企業登録ボタン -->
+  <div class="btn-wrap" style="margin-bottom: 2rem;">
+    <button onclick="openAddModal()" class="btn btn-success">➕ 新規企業登録</button>
+  </div>
+
+  <!-- 企業一覧テーブル -->
   <section class="company-table">
     <table>
       <thead>
@@ -455,13 +477,14 @@ h1 {
           <th>企業名</th>
           <th>業界</th>
           <th>所在地</th>
-          <th>電話番号</th>
+          <th>連絡先</th>
           <th>採用状況</th>
           <th>登録日</th>
           <th>操作</th>
         </tr>
       </thead>
       <tbody>
+        <!-- サンプルデータ（実際の実装ではデータベースから取得） -->
         <tr>
           <td>株式会社サンプルIT</td>
           <td>IT・ソフトウェア</td>
