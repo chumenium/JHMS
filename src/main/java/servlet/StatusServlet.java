@@ -35,6 +35,11 @@ public class StatusServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		try {
+			// 文字エンコーディングをUTF-8に設定
+			request.setCharacterEncoding("UTF-8");
+			response.setCharacterEncoding("UTF-8");
+			response.setContentType("text/html; charset=UTF-8");
+			
 			String view = request.getParameter("view");
 	        String nextPage = "/WEB-INF/jsp/status.jsp"; 
 
@@ -59,6 +64,9 @@ public class StatusServlet extends HttpServlet {
 	                    break;
 	                case "studentManagement":
 	                    nextPage = "/WEB-INF/jsp/StudentManagement.jsp";
+	                    break;
+	                case "studentList":
+	                    nextPage = "/WEB-INF/jsp/StudentList.jsp";
 	                    break;
 	                case "DashBoard":
 	                    nextPage = "/WEB-INF/jsp/DashBoard.jsp";

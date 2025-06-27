@@ -1,68 +1,33 @@
-<!--*
-：：：色のテーマは緑：：：
-学生管理画面
-
-
-**********
-
-<!--* 画面：学生管理画面
-        	
-許可されている権限：
-・教員：teacher
-・校長・教務部長：headmaster
-・システム管理者：admin
- 
-▼▼▼▼
-*-->
-
-
-<!--確認まだ-->
-
-<!--KCS_JMS_PROJECT-->
-
-
-<!-- 学生管理画面用 -->
-
-<!-- バックエンドとの接続のやり取りがあるためいったん放置 -->
-
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!--▼▼▼▼▼スコープから取得する情報　これをもとに判定をしていく -->
 <% 
   String username = (String) session.getAttribute("username"); 
   String role     = (String) session.getAttribute("role"); 
-  
-  // リクエストスコープからプルダウン用データを取得
-  java.util.List<String> classList = (java.util.List<String>) request.getAttribute("classList");
-  java.util.List<String> enrollmentStatusList = (java.util.List<String>) request.getAttribute("enrollmentStatusList");
-  java.util.List<String> assistanceList = (java.util.List<String>) request.getAttribute("assistanceList");
-  java.util.List<String> firstChoiceIndustryList = (java.util.List<String>) request.getAttribute("firstChoiceIndustryList");
-  java.util.List<Integer> graduationYearList = (java.util.List<Integer>) request.getAttribute("graduationYearList");
-  
-  // エラーメッセージを取得
-  String errorMessage = (String) request.getAttribute("errorMessage");
 %>
 <!--▲▲▲▲▲-->
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>JMSアプリ - 学生管理</title>
+<title>JMSアプリ - 学生一覧</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="本アプリは就職対策アプリです。">
 <link rel="stylesheet" href="css/style.css">
 
 <style>
-    /* 学生管理画面全体 - ダッシュボードスタイルを参考 */
-    .student-management-page {
+    /* 学生一覧画面全体 */
+    .student-list-page {
         background: #1a1a1a;
         min-height: 100vh;
         position: relative;
         overflow-x: hidden;
     }
 
-    .student-management-page::before {
+    .student-list-page::before {
         content: '';
         position: absolute;
         top: 0;
@@ -73,8 +38,8 @@
         z-index: 0;
     }
 
-    .student-management-container {
-        max-width: 1000px;
+    .student-list-container {
+        max-width: 1200px;
         margin: 0 auto;
         padding: 20px;
         position: relative;
@@ -82,7 +47,7 @@
         min-height: 100vh;
     }
 
-    /* ページヘッダー - ダッシュボードヘッダーを参考 */
+    /* ページヘッダー */
     .page-header {
         background: rgba(255, 255, 255, 0.95);
         border-radius: 15px;
@@ -164,8 +129,8 @@
         font-weight: bold;
     }
 
-    /* クイックアクション - ダッシュボードスタイルを参考 */
-    .quick-actions {
+    /* 検索・フィルター機能 */
+    .search-filter-section {
         background: rgba(255, 255, 255, 0.95);
         border-radius: 15px;
         padding: 25px;
@@ -177,7 +142,7 @@
         overflow: hidden;
     }
 
-    .quick-actions::before {
+    .search-filter-section::before {
         content: '';
         position: absolute;
         top: 0;
@@ -187,7 +152,7 @@
         background: linear-gradient(45deg, #667eea, #764ba2);
     }
 
-    .quick-actions h3 {
+    .search-filter-section h3 {
         font-size: 1.3rem;
         color: var(--primary-color);
         margin-bottom: 20px;
@@ -195,318 +160,302 @@
         font-weight: bold;
     }
 
-    .action-buttons {
+    .search-form {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         gap: 15px;
+        margin-bottom: 20px;
     }
 
-    .action-btn {
-        background: linear-gradient(45deg, var(--primary-color), #5CA564);
-        color: white;
-        padding: 15px 20px;
-        border-radius: 15px;
-        text-decoration: none;
-        font-weight: bold;
+    .form-group {
         display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        transition: all 0.3s ease;
-        border: none;
-        cursor: pointer;
-        font-size: 1rem;
-        box-shadow: 0 5px 15px rgba(44, 119, 68, 0.3);
-        position: relative;
-        overflow: hidden;
+        flex-direction: column;
+        gap: 5px;
     }
 
-    .action-btn::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-        transition: left 0.5s;
-    }
-
-    .action-btn:hover::before {
-        left: 100%;
-    }
-
-    .action-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 25px rgba(44, 119, 68, 0.4);
-        color: white;
-        text-decoration: none;
-    }
-
-    .action-btn.secondary {
-        background: linear-gradient(45deg, #667eea, #764ba2);
-        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
-    }
-
-    .action-btn.secondary:hover {
-        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
-    }
-
-    /* メインコンテンツ - ダッシュボードのfeature-cardを参考 */
-    .management-main {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-        gap: 30px;
-        margin-bottom: 30px;
-        max-width: 900px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    /* 2つのカードの場合の特別なレイアウト */
-    @media (min-width: 768px) {
-        .management-main {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-
-    /* 機能カード - ダッシュボードのfeature-cardを参考 */
-    .management-card {
-        background: rgba(255, 255, 255, 0.95);
-        border-radius: 15px;
-        padding: 25px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-        text-align: center;
-    }
-
-    .management-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(45deg, var(--primary-color), #5CA564);
-    }
-
-    .management-card::after {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(44, 119, 68, 0.1) 0%, transparent 70%);
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        pointer-events: none;
-    }
-
-    .management-card:hover::after {
-        opacity: 1;
-    }
-
-    .management-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-    }
-
-    .card-icon {
-        font-size: 3rem;
-        margin-bottom: 15px;
-        display: block;
-        background: linear-gradient(45deg, var(--primary-color), #5CA564);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.1));
-    }
-
-    .card-title {
-        font-size: 1.3rem;
+    .form-group label {
         font-weight: bold;
         color: #333;
-        margin-bottom: 10px;
-        position: relative;
+        font-size: 0.9rem;
     }
 
-    .card-title::after {
-        content: '';
-        position: absolute;
-        bottom: -5px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 30px;
-        height: 2px;
-        background: linear-gradient(45deg, var(--primary-color), #5CA564);
-        border-radius: 1px;
-    }
-
-    .card-description {
-        color: #666;
-        margin-bottom: 20px;
-        line-height: 1.5;
-        font-size: 0.95rem;
-    }
-
-    .card-stats {
-        display: flex;
-        justify-content: space-around;
-        margin-bottom: 20px;
-        padding: 15px;
-        background: linear-gradient(135deg, rgba(44, 119, 68, 0.05), rgba(92, 165, 100, 0.05));
+    .form-group input,
+    .form-group select {
+        padding: 10px 15px;
+        border: 2px solid #e0e0e0;
         border-radius: 10px;
-        border: 1px solid rgba(44, 119, 68, 0.1);
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: white;
     }
 
-    .stat-item {
-        text-align: center;
-        position: relative;
+    .form-group input:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(44, 119, 68, 0.1);
     }
 
-    .stat-item:not(:last-child)::after {
-        content: '';
-        position: absolute;
-        right: -50%;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 1px;
-        height: 25px;
-        background: linear-gradient(to bottom, transparent, rgba(44, 119, 68, 0.3), transparent);
+    .search-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
     }
 
-    .stat-number {
-        font-size: 1.8rem;
-        font-weight: bold;
-        color: var(--primary-color);
-        display: block;
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-    }
-
-    .stat-label {
-        font-size: 0.85rem;
-        color: #666;
-        margin-top: 5px;
-        font-weight: 500;
-    }
-
-    .card-link {
+    .search-btn {
         background: linear-gradient(45deg, var(--primary-color), #5CA564);
         color: white;
         padding: 12px 25px;
         border-radius: 25px;
         text-decoration: none;
         font-weight: bold;
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
         transition: all 0.3s ease;
         border: none;
         cursor: pointer;
-        width: 100%;
-        text-align: center;
-        box-sizing: border-box;
         font-size: 1rem;
-        position: relative;
-        overflow: hidden;
         box-shadow: 0 5px 15px rgba(44, 119, 68, 0.3);
     }
 
-    .card-link::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-        transition: left 0.5s;
-    }
-
-    .card-link:hover::before {
-        left: 100%;
-    }
-
-    .card-link:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(44, 119, 68, 0.4);
+    .search-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(44, 119, 68, 0.4);
         color: white;
         text-decoration: none;
     }
 
-    /* レスポンシブ対応 - ダッシュボードと同様 */
-    @media screen and (max-width: 768px) {
-        .page-title {
-            font-size: 2rem;
-        }
-        
-        .management-main {
-            grid-template-columns: 1fr;
-        }
-        
-        .action-buttons {
-            grid-template-columns: 1fr;
-        }
-        
-        .card-stats {
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .stat-item:not(:last-child)::after {
-            display: none;
-        }
+    .reset-btn {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        padding: 12px 25px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: bold;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
     }
 
-    /* アニメーション効果 */
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    .reset-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        color: white;
+        text-decoration: none;
     }
 
-    .page-header,
-    .quick-actions,
-    .management-card {
-        animation: fadeInUp 0.6s ease forwards;
+    /* 学生一覧テーブル */
+    .student-table-section {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        margin-bottom: 30px;
+        position: relative;
+        overflow: hidden;
     }
 
-    .management-card:nth-child(1) { animation-delay: 0.1s; }
-    .management-card:nth-child(2) { animation-delay: 0.2s; }
+    .student-table-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(45deg, var(--primary-color), #5CA564);
+    }
+
+    .table-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .table-title {
+        font-size: 1.5rem;
+        color: var(--primary-color);
+        font-weight: bold;
+    }
+
+    .table-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .action-btn {
+        background: linear-gradient(45deg, var(--primary-color), #5CA564);
+        color: white;
+        padding: 8px 15px;
+        border-radius: 20px;
+        text-decoration: none;
+        font-weight: bold;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        font-size: 0.9rem;
+        box-shadow: 0 3px 10px rgba(44, 119, 68, 0.3);
+    }
+
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(44, 119, 68, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+
+    .action-btn.secondary {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+    }
+
+    .action-btn.secondary:hover {
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    /* テーブルスタイル */
+    .student-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .student-table th {
+        background: linear-gradient(45deg, var(--primary-color), #5CA564);
+        color: white;
+        padding: 15px 10px;
+        text-align: left;
+        font-weight: bold;
+        font-size: 0.95rem;
+        border: none;
+    }
+
+    .student-table td {
+        padding: 12px 10px;
+        border-bottom: 1px solid #e0e0e0;
+        font-size: 0.9rem;
+        color: #333;
+    }
+
+    .student-table tr:hover {
+        background: rgba(44, 119, 68, 0.05);
+    }
+
+    .student-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .status-badge {
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        text-align: center;
+        display: inline-block;
+        min-width: 80px;
+    }
+
+    .status-active {
+        background: rgba(44, 119, 68, 0.2);
+        color: var(--primary-color);
+    }
+
+    .status-inactive {
+        background: rgba(255, 59, 48, 0.2);
+        color: #ff3b30;
+    }
+
+    .status-pending {
+        background: rgba(255, 149, 0, 0.2);
+        color: #ff9500;
+    }
+
+    /* ページネーション */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+    }
+
+    .pagination a,
+    .pagination span {
+        padding: 8px 12px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+
+    .pagination a {
+        background: rgba(44, 119, 68, 0.1);
+        color: var(--primary-color);
+    }
+
+    .pagination a:hover {
+        background: var(--primary-color);
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .pagination .current {
+        background: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+    }
+
+    .pagination .disabled {
+        background: #f0f0f0;
+        color: #999;
+        cursor: not-allowed;
+    }
 
     /* ダッシュボード用ヘッダー調整 */
-    .student-management-page header {
+    .student-list-page header {
         position: relative;
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(10px);
         border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     }
 
-    .student-management-page #mainimg {
+    .student-list-page #mainimg {
         display: none;
     }
 
-    .student-management-page main {
+    .student-list-page main {
         margin-top: 0;
     }
 
     /* テキストスライドショー用の調整 */
-    .student-management-page .text-slide-wrapper {
+    .student-list-page .text-slide-wrapper {
         margin-top: 0;
         margin-bottom: 0;
         background: rgba(0, 0, 0, 0.3);
         backdrop-filter: blur(10px);
     }
 
-    .student-management-page .text-slide {
+    .student-list-page .text-slide {
         background: linear-gradient(45deg, var(--primary-color), #5CA564);
         color: white;
         padding: 15px 0;
@@ -519,7 +468,7 @@
         overflow: hidden;
     }
 
-    .student-management-page .text-slide::before {
+    .student-list-page .text-slide::before {
         content: '';
         position: absolute;
         top: 0;
@@ -535,10 +484,31 @@
         50% { left: 100%; }
         100% { left: 100%; }
     }
+
+    /* レスポンシブ対応 */
+    @media (max-width: 768px) {
+        .search-form {
+            grid-template-columns: 1fr;
+        }
+        
+        .table-header {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        
+        .student-table {
+            font-size: 0.8rem;
+        }
+        
+        .student-table th,
+        .student-table td {
+            padding: 8px 5px;
+        }
+    }
 </style>
 
 </head>
-<body class="student-management-page">
+<body class="student-list-page">
 <% 
   // 権限名を日本語に変換
   String roleDisplay = "";
@@ -585,90 +555,166 @@
     <!--▲▲▲▲▲ここまで「ヘッダー」-->
 
     <main>
-        <div class="student-management-container">
+        <div class="student-list-container">
             <!-- ページヘッダー -->
             <div class="page-header">
-                <h1 class="page-title">学生管理</h1>
-                <p class="page-subtitle">学生情報の管理と就職活動の進捗を把握できます</p>
+                <h1 class="page-title">学生一覧</h1>
+                <p class="page-subtitle">登録されている学生の一覧を表示し、詳細情報の確認や編集を行えます</p>
                 <div class="breadcrumb">
                     <a href="javascript:void(0);" onclick="location.reload();">ダッシュボード</a>
                     <span class="separator">/</span>
-                    <span>学生管理</span>
+                    <a href="${pageContext.request.contextPath}/StatusServlet?view=studentManagement">学生管理</a>
+                    <span class="separator">/</span>
+                    <span>学生一覧</span>
                 </div>
             </div>
 
-            <!-- エラーメッセージ表示 -->
-            <% if (errorMessage != null && !errorMessage.isEmpty()) { %>
-                <div class="error-message" style="background: #ffebee; border: 1px solid #f44336; border-radius: 10px; padding: 15px; margin-bottom: 20px; color: #d32f2f;">
-                    <h4 style="margin: 0 0 10px 0; color: #d32f2f;">⚠️ エラーが発生しました</h4>
-                    <p style="margin: 0;"><%= errorMessage %></p>
-                </div>
-            <% } %>
-
-            <!-- クイックアクション -->
-            <div class="quick-actions">
-                <h3>🚀 クイックアクション</h3>
-                <div class="action-buttons">
-                    <a href="StatusServlet?view=studentList" class="action-btn">
-                        <i class="fas fa-list"></i>学生一覧を表示
-                    </a>
-                    <a href="StatusServlet?view=createStudent" class="action-btn">
-                        <i class="fas fa-plus"></i>新規学生登録
-                    </a>
-                    <a href="StatusServlet?view=studentSearch" class="action-btn secondary">
-                        <i class="fas fa-search"></i>学生検索
-                    </a>
-                    <a href="StatusServlet?view=studentExport" class="action-btn secondary">
-                        <i class="fas fa-download"></i>データエクスポート
-                    </a>
-                </div>
+            <!-- 検索・フィルター機能 -->
+            <div class="search-filter-section">
+                <h3>🔍 検索・フィルター</h3>
+                <form class="search-form" method="GET" action="${pageContext.request.contextPath}/StudentSearchServlet">
+                    <div class="form-group">
+                        <label for="studentName">学生氏名</label>
+                        <input type="text" id="studentName" name="studentName" placeholder="氏名を入力">
+                    </div>
+                    <div class="form-group">
+                        <label for="studentId">学生番号</label>
+                        <input type="text" id="studentId" name="studentId" placeholder="学生番号を入力">
+                    </div>
+                    <div class="form-group">
+                        <label for="department">学科</label>
+                        <select id="department" name="department">
+                            <option value="">すべての学科</option>
+                            <option value="情報システム科">情報システム科</option>
+                            <option value="情報デザイン科">情報デザイン科</option>
+                            <option value="情報ビジネス科">情報ビジネス科</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="status">就職状況</label>
+                        <select id="status" name="status">
+                            <option value="">すべて</option>
+                            <option value="active">就職活動中</option>
+                            <option value="inactive">未活動</option>
+                            <option value="pending">内定待ち</option>
+                        </select>
+                    </div>
+                    <div class="search-buttons">
+                        <button type="submit" class="search-btn">
+                            <i class="fas fa-search"></i>検索
+                        </button>
+                        <button type="reset" class="reset-btn">
+                            <i class="fas fa-undo"></i>リセット
+                        </button>
+                    </div>
+                </form>
             </div>
 
-            <!-- メインコンテンツ -->
-            <div class="management-main">
-                
-                <!-- 学生一覧管理 -->
-                <div class="management-card">
-                    <span class="card-icon">📋</span>
-                    <h3 class="card-title">学生一覧管理</h3>
-                    <p class="card-description">
-                        登録されている学生の一覧を表示し、詳細情報の確認や編集を行えます。
-                    </p>
-                    <div class="card-stats">
-                        <div class="stat-item">
-                            <span class="stat-number">150</span>
-                            <span class="stat-label">総学生数</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number">45</span>
-                            <span class="stat-label">就職活動中</span>
-                        </div>
+            <!-- 学生一覧テーブル -->
+            <div class="student-table-section">
+                <div class="table-header">
+                    <h3 class="table-title">📋 学生一覧</h3>
+                    <div class="table-actions">
+                        <a href="${pageContext.request.contextPath}/StatusServlet?view=createStudent" class="action-btn">
+                            <i class="fas fa-plus"></i>新規登録
+                        </a>
+                        <a href="${pageContext.request.contextPath}/StudentExportServlet" class="action-btn secondary">
+                            <i class="fas fa-download"></i>エクスポート
+                        </a>
                     </div>
-                    <a href="StatusServlet?view=studentList" class="card-link">
-                        学生一覧を表示
-                    </a>
                 </div>
 
-                <!-- 新規学生登録 -->
-                <div class="management-card">
-                    <span class="card-icon">👤</span>
-                    <h3 class="card-title">新規学生登録</h3>
-                    <p class="card-description">
-                        新しい学生の情報を登録し、システムに追加できます。
-                    </p>
-                    <div class="card-stats">
-                        <div class="stat-item">
-                            <span class="stat-number">12</span>
-                            <span class="stat-label">今月登録</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number">3</span>
-                            <span class="stat-label">未完了</span>
-                        </div>
-                    </div>
-                    <a href="StatusServlet?view=createStudent" class="card-link">
-                        新規学生を登録
-                    </a>
+                <table class="student-table">
+                    <thead>
+                        <tr>
+                            <th>学生番号</th>
+                            <th>氏名</th>
+                            <th>学科</th>
+                            <th>学年</th>
+                            <th>就職状況</th>
+                            <th>最終更新日</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- サンプルデータ -->
+                        <tr>
+                            <td>2024001</td>
+                            <td>田中 太郎</td>
+                            <td>情報システム科</td>
+                            <td>3年</td>
+                            <td><span class="status-badge status-active">就職活動中</span></td>
+                            <td>2024-01-15</td>
+                            <td>
+                                <a href="${pageContext.request.contextPath}/StudentDetailServlet?id=2024001" class="action-btn">
+                                    <i class="fas fa-eye"></i>詳細
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2024002</td>
+                            <td>佐藤 花子</td>
+                            <td>情報デザイン科</td>
+                            <td>3年</td>
+                            <td><span class="status-badge status-pending">内定待ち</span></td>
+                            <td>2024-01-14</td>
+                            <td>
+                                <a href="${pageContext.request.contextPath}/StudentDetailServlet?id=2024002" class="action-btn">
+                                    <i class="fas fa-eye"></i>詳細
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2024003</td>
+                            <td>鈴木 次郎</td>
+                            <td>情報ビジネス科</td>
+                            <td>2年</td>
+                            <td><span class="status-badge status-inactive">未活動</span></td>
+                            <td>2024-01-13</td>
+                            <td>
+                                <a href="${pageContext.request.contextPath}/StudentDetailServlet?id=2024003" class="action-btn">
+                                    <i class="fas fa-eye"></i>詳細
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2024004</td>
+                            <td>高橋 美咲</td>
+                            <td>情報システム科</td>
+                            <td>3年</td>
+                            <td><span class="status-badge status-active">就職活動中</span></td>
+                            <td>2024-01-12</td>
+                            <td>
+                                <a href="${pageContext.request.contextPath}/StudentDetailServlet?id=2024004" class="action-btn">
+                                    <i class="fas fa-eye"></i>詳細
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2024005</td>
+                            <td>伊藤 健太</td>
+                            <td>情報デザイン科</td>
+                            <td>3年</td>
+                            <td><span class="status-badge status-pending">内定待ち</span></td>
+                            <td>2024-01-11</td>
+                            <td>
+                                <a href="${pageContext.request.contextPath}/StudentDetailServlet?id=2024005" class="action-btn">
+                                    <i class="fas fa-eye"></i>詳細
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- ページネーション -->
+                <div class="pagination">
+                    <a href="?page=1" class="disabled">&laquo; 最初</a>
+                    <a href="?page=1" class="disabled">&lsaquo; 前へ</a>
+                    <span class="current">1</span>
+                    <a href="?page=2">2</a>
+                    <a href="?page=3">3</a>
+                    <a href="?page=2">次へ &rsaquo;</a>
+                    <a href="?page=10">最後 &raquo;</a>
                 </div>
             </div>
         </div>
@@ -677,7 +723,7 @@
     <!--▼▼▼▼▼ここから「テキストスライドショー」-->
     <div class="text-slide-wrapper">
         <div class="text-slide">
-            <span>Student Management System</span>
+            <span>Student List Management</span>
         </div>
     </div>
     <!--▲▲▲▲▲ここまで「テキストスライドショー」-->
@@ -778,4 +824,4 @@
 <script src="js/main.js"></script>
 
 </body>
-</html>
+</html> 

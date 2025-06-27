@@ -1,6 +1,7 @@
 package servlet;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.servlet.RequestDispatcher;
@@ -44,18 +45,35 @@ public class StudentManagementServlet extends HttpServlet {
             return;
         }
         
-		DropdownDataDAO dao = new DropdownDataDAO();
-        List<String> classes = dao.getClasses();
-        List<String> statuses = dao.getEnrollmentStatuses();
-        List<String> mediations = dao.getMediationStatuses();
-        List<String> industries = dao.getIndustries();
-        List<Integer> years = dao.getGraduationYears();
+        try {
+            DropdownDataDAO dao = new DropdownDataDAO();
+            List<String> classes = dao.getClasses();
+            List<String> statuses = dao.getEnrollmentStatuses();
+            List<String> mediations = dao.getMediationStatuses();
+            List<String> industries = dao.getIndustries();
+            List<Integer> years = dao.getGraduationYears();
 
-        request.setAttribute("classes", classes);
-        request.setAttribute("statuses", statuses);
-        request.setAttribute("mediations", mediations);
-        request.setAttribute("industries", industries);
-        request.setAttribute("years", years);
+            // JSPファイルが期待する属性名で設定
+            request.setAttribute("classList", classes);
+            request.setAttribute("enrollmentStatusList", statuses);
+            request.setAttribute("assistanceList", mediations);
+            request.setAttribute("firstChoiceIndustryList", industries);
+            request.setAttribute("graduationYearList", years);
+        } catch (Exception e) {
+            // データベースエラーが発生した場合の処理
+            System.err.println("StudentManagementServlet Error: " + e.getMessage());
+            e.printStackTrace();
+            
+            // 空のリストを設定してエラーを回避
+            request.setAttribute("classList", new ArrayList<String>());
+            request.setAttribute("enrollmentStatusList", new ArrayList<String>());
+            request.setAttribute("assistanceList", new ArrayList<String>());
+            request.setAttribute("firstChoiceIndustryList", new ArrayList<String>());
+            request.setAttribute("graduationYearList", new ArrayList<Integer>());
+            
+            // エラーメッセージを設定
+            request.setAttribute("errorMessage", "データの取得中にエラーが発生しました: " + e.getMessage());
+        }
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/StudentManagement.jsp");
         dispatcher.forward(request, response);
