@@ -46,6 +46,7 @@
 <!--▲▲▲▲▲-->
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -380,8 +381,7 @@ h1 {
   </div>
 <% } %>
 
-    <form class="grid-form" action="StudentServlet" method="post">
-      <input type="hidden" name="action" value="searchStudents">
+    <form class="grid-form" action="StudentSearchServlet" method="post">
       <div class="grid-container">
         <div class="field">
           <label for="student_id">学生番号</label>
@@ -391,16 +391,9 @@ h1 {
           <label for="class">クラス</label>
           <select id="class" name="class">
             <option value="">選択してください</option>
-            <% 
-              java.util.List<String> classes = (java.util.List<String>) request.getAttribute("classes");
-              if (classes != null) { 
-                for (String className : classes) { 
-            %>
-                <option value="<%= className %>"><%= className %></option>
-            <% 
-                } 
-              } 
-            %>
+            <c:forEach var="classVal" items="${classes}">
+              <option value="${classVal}">${classVal}</option>
+            </c:forEach>
           </select>
         </div>
         <div class="field">
@@ -415,16 +408,9 @@ h1 {
           <label for="enrollment_status">在籍状況</label>
           <select id="enrollment_status" name="enrollment_status">
             <option value="">選択してください</option>
-            <% 
-              java.util.List<String> enrollmentStatuss = (java.util.List<String>) request.getAttribute("enrollmentStatuss");
-              if (enrollmentStatuss != null) { 
-                for (String status : enrollmentStatuss) { 
-            %>
-                <option value="<%= status %>"><%= status %></option>
-            <% 
-                } 
-              } 
-            %>
+            <c:forEach var="status" items="${statuses}">
+              <option value="${status}">${status}</option>
+            </c:forEach>
           </select>
         </div>
         <div class="field">
@@ -440,48 +426,27 @@ h1 {
           <label for="mediation_status">斡旋</label>
           <select id="mediation_status" name="mediation_status">
             <option value="">選択してください</option>
-            <% 
-              java.util.List<String> assistanceTypes = (java.util.List<String>) request.getAttribute("assistanceTypes");
-              if (assistanceTypes != null) { 
-                for (String assistance : assistanceTypes) { 
-            %>
-                <option value="<%= assistance %>"><%= assistance %></option>
-            <% 
-                } 
-              } 
-            %>
+            <c:forEach var="mediation" items="${mediations}">
+              <option value="${mediation}">${mediation}</option>
+            </c:forEach>
           </select>
         </div>
         <div class="field">
           <label for="desired_job_type_1st">第一希望業種</label>
           <select id="desired_job_type_1st" name="desired_job_type_1st">
             <option value="">選択してください</option>
-            <% 
-              java.util.List<String> industries = (java.util.List<String>) request.getAttribute("industries");
-              if (industries != null) { 
-                for (String industry : industries) { 
-            %>
-                <option value="<%= industry %>"><%= industry %></option>
-            <% 
-                } 
-              } 
-            %>
+            <c:forEach var="industry" items="${industries}">
+              <option value="${industry}">${industry}</option>
+            </c:forEach>
           </select>
         </div>
         <div class="field">
           <label for="graduation_year">卒業年</label>
           <select id="graduation_year" name="graduation_year">
             <option value="">選択してください</option>
-            <% 
-              java.util.List<String> graduationYears = (java.util.List<String>) request.getAttribute("graduationYears");
-              if (graduationYears != null) { 
-                for (String year : graduationYears) { 
-            %>
-                <option value="<%= year %>"><%= year %></option>
-            <% 
-                } 
-              } 
-            %>
+            <c:forEach var="year" items="${years}">
+              <option value="${year}">${year}</option>
+            </c:forEach>
           </select>
         </div>
       </div>

@@ -15,6 +15,15 @@
     <url-pattern>/StudentManagementServlet</url-pattern>
   </servlet-mapping>
   
+  <servlet>
+    <servlet-name>StatusServlet</servlet-name>
+    <servlet-class>servlet.StatusServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>StatusServlet</servlet-name>
+    <url-pattern>/StatusServlet</url-pattern>
+  </servlet-mapping>
 
   <servlet>
     <servlet-name>LoginServlet</servlet-name>
@@ -27,13 +36,13 @@
   </servlet-mapping>
   
   <servlet>
-    <servlet-name>StudentServlet</servlet-name>
-    <servlet-class>servlet.StudentServlet</servlet-class>
+    <servlet-name>LogoutServlet</servlet-name>
+    <servlet-class>servlet.LogoutServlet</servlet-class>
   </servlet>
   
   <servlet-mapping>
-    <servlet-name>StudentServlet</servlet-name>
-    <url-pattern>/StudentServlet</url-pattern>
+    <servlet-name>LogoutServlet</servlet-name>
+    <url-pattern>/LogoutServlet</url-pattern>
   </servlet-mapping>
   
 </web-app>
