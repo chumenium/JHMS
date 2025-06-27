@@ -52,9 +52,8 @@ public class StatusServlet extends HttpServlet {
                     nextPage = "/WEB-INF/jsp/3.jsp";
                     break;
                 case "studentManagement":
-                    // 学生管理画面は専用のServletにリダイレクト
-                    response.sendRedirect(request.getContextPath() + "/StudentManagementServlet");
-                    return;
+                    nextPage = "/WEB-INF/jsp/StudentManagement.jsp";
+                    break;
                 case "DashBoard":
                     nextPage = "/WEB-INF/jsp/DashBoard.jsp";
                     break;

@@ -39,7 +39,6 @@
         max-width: 1200px;
         margin: 0 auto;
         padding: 20px;
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
         min-height: 100vh;
     }
 
@@ -194,6 +193,33 @@
         text-decoration: none;
     }
 
+    /* テキストスライドショー用の調整 */
+    .dashboard-page .text-slide-wrapper {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    .dashboard-page .text-slide {
+        font-size: 8vw;
+        opacity: 0.08;
+    }
+
+    /* ダッシュボード用ヘッダー調整 */
+    .dashboard-page header {
+        position: relative;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .dashboard-page #mainimg {
+        display: none;
+    }
+
+    .dashboard-page main {
+        margin-top: 0;
+    }
+
     /* レスポンシブ対応 */
     @media (max-width: 768px) {
         .dashboard-container {
@@ -207,6 +233,10 @@
         
         .dashboard-main {
             grid-template-columns: 1fr;
+        }
+
+        .dashboard-page .text-slide {
+            font-size: 12vw;
         }
     }
 
@@ -231,22 +261,6 @@
     .feature-card:nth-child(3) { animation-delay: 0.3s; }
     .feature-card:nth-child(4) { animation-delay: 0.4s; }
     .feature-card:nth-child(5) { animation-delay: 0.5s; }
-
-    /* ダッシュボード用ヘッダー調整 */
-    .dashboard-page header {
-        position: relative;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .dashboard-page #mainimg {
-        display: none;
-    }
-
-    .dashboard-page main {
-        margin-top: 0;
-    }
 </style>
 </head>
 
@@ -270,29 +284,29 @@
 <div id="container">
     <!--▼▼▼▼▼ここから「ヘッダー」-->
     <header>
-        <h1 id="logo"><a href="index.html"><img src="images/logo.png" alt="jms"></a></h1>
+        <h1 id="logo"><a href="javascript:void(0);" onclick="location.reload();"><img src="images/logo.png" alt="jms"></a></h1>
         <nav>
             <ul>
-                <li><a href="index.html">ホーム</a></li>
+                <li><a href="javascript:void(0);" onclick="location.reload();">ホーム</a></li>
                 <!-- 権限に応じた機能リンク -->
                 <% if ("teacher".equals(role) || "headmaster".equals(role) || "admin".equals(role)) { %>
-                    <li><a href="StatusServlet?view=studentManagement">学生管理</a></li>
+                    <li><a href="${pageContext.request.contextPath}/StatusServlet?view=studentManagement">学生管理</a></li>
                 <% } %>
                 <% if ("egd".equals(role) || "admin".equals(role)) { %>
-                    <li><a href="StatusServlet?view=CompanyManagement">企業管理</a></li>
+                    <li><a href="${pageContext.request.contextPath}/StatusServlet?view=CompanyManagement">企業管理</a></li>
                 <% } %>
                 <% if ("teacher".equals(role) || "headmaster".equals(role) || "egd".equals(role) || "admin".equals(role) || "student".equals(role)) { %>
-                    <li><a href="StatusServlet?view=jobHunting">就職管理</a></li>
+                    <li><a href="${pageContext.request.contextPath}/StatusServlet?view=jobHunting">就職管理</a></li>
                 <% } %>
                 <% if ("teacher".equals(role) || "headmaster".equals(role) || "egd".equals(role) || "admin".equals(role)) { %>
-                    <li><a href="StatusServlet?view=applicantList">受験者一覧</a></li>
+                    <li><a href="${pageContext.request.contextPath}/StatusServlet?view=applicantList">受験者一覧</a></li>
                 <% } %>
                 <% if ("admin".equals(role)) { %>
-                    <li><a href="StatusServlet?view=adminDatabase.jsp">システム管理</a></li>
+                    <li><a href="${pageContext.request.contextPath}/StatusServlet?view=adminDatabase.jsp">システム管理</a></li>
                 <% } %>
                 <li><a href="extension.html">お問い合わせ</a></li>
                 <% if (username != null) { %>
-                    <li><a href="LogoutServlet">ログアウト</a></li>
+                    <li><a href="${pageContext.request.contextPath}/LogoutServlet">ログアウト</a></li>
                 <% } %>
             </ul>
         </nav>
@@ -300,111 +314,171 @@
     <!--▲▲▲▲▲ここまで「ヘッダー」-->
 
     <main>
-        <div class="dashboard-container">
-            <!-- ダッシュボードヘッダー -->
-            <div class="dashboard-header">
-                <div class="user-info">
-                    <div class="user-welcome">
-                        <div class="user-avatar">
-                            <%= username != null ? username.charAt(0) : "U" %>
+        <!--▼▼▼▼▼ここから「ダッシュボードメイン」-->
+        <section class="bg1 bg-pattern1">
+            <div class="dashboard-container">
+                <!-- ダッシュボードヘッダー -->
+                <div class="dashboard-header">
+                    <div class="user-info">
+                        <div class="user-welcome">
+                            <div class="user-avatar">
+                                <%= username != null ? username.charAt(0) : "U" %>
+                            </div>
+                            <div class="user-details">
+                                <h2>こんにちは、<%= username != null ? username : "ゲスト" %>さん</h2>
+                                <span class="role-badge"><%= roleDisplay %></span>
+                            </div>
                         </div>
-                        <div class="user-details">
-                            <h2>こんにちは、<%= username != null ? username : "ゲスト" %>さん</h2>
-                            <span class="role-badge"><%= roleDisplay %></span>
-                        </div>
+                        <% if (username != null) { %>
+                            <a href="${pageContext.request.contextPath}/LogoutServlet" class="logout-btn">ログアウト</a>
+                        <% } %>
                     </div>
-                    <% if (username != null) { %>
-                        <a href="LogoutServlet" class="logout-btn">ログアウト</a>
+                </div>
+
+                <!-- メインコンテンツ -->
+                <div class="dashboard-main">
+                    
+                    <!-- 学生管理機能 -->
+                    <% if ("teacher".equals(role) || "headmaster".equals(role) || "admin".equals(role)) { %>
+                        <div class="feature-card">
+                            <span class="feature-icon">📚</span>
+                            <h3 class="feature-title">学生管理</h3>
+                            <p class="feature-description">
+                                学生の情報を管理し、就職活動の進捗を把握できます。
+                            </p>
+                            <a href="${pageContext.request.contextPath}/StatusServlet?view=studentManagement" class="feature-link">
+                                学生管理画面を開く
+                            </a>
+                        </div>
+                    <% } %>
+
+                    <!-- 企業管理機能 -->
+                    <% if ("egd".equals(role) || "admin".equals(role)) { %>
+                        <div class="feature-card">
+                            <span class="feature-icon">🏢</span>
+                            <h3 class="feature-title">企業管理</h3>
+                            <p class="feature-description">
+                                企業情報の登録・編集と求人情報の管理を行います。
+                            </p>
+                            <a href="${pageContext.request.contextPath}/StatusServlet?view=CompanyManagement" class="feature-link">
+                                企業管理画面を開く
+                            </a>
+                        </div>
+                    <% } %>
+
+                    <!-- 就職管理機能 -->
+                    <% if ("teacher".equals(role) || "headmaster".equals(role) || "egd".equals(role) || "admin".equals(role) || "student".equals(role)) { %>
+                        <div class="feature-card">
+                            <span class="feature-icon">📄</span>
+                            <h3 class="feature-title">就職管理</h3>
+                            <p class="feature-description">
+                                就職活動の進捗管理と選考状況の記録を行います。
+                            </p>
+                            <a href="${pageContext.request.contextPath}/StatusServlet?view=jobHunting" class="feature-link">
+                                就職管理画面を開く
+                            </a>
+                        </div>
+                    <% } %>
+
+                    <!-- 受験者一覧機能 -->
+                    <% if ("teacher".equals(role) || "headmaster".equals(role) || "egd".equals(role) || "admin".equals(role)) { %>
+                        <div class="feature-card">
+                            <span class="feature-icon">📊</span>
+                            <h3 class="feature-title">受験者一覧</h3>
+                            <p class="feature-description">
+                                企業の選考に応募した学生の一覧と進捗を確認できます。
+                            </p>
+                            <a href="${pageContext.request.contextPath}/StatusServlet?view=applicantList" class="feature-link">
+                                受験者一覧を表示
+                            </a>
+                        </div>
+                    <% } %>
+
+                    <!-- 管理者DB機能 -->
+                    <% if ("admin".equals(role)) { %>
+                        <div class="feature-card">
+                            <span class="feature-icon">🛠</span>
+                            <h3 class="feature-title">システム管理</h3>
+                            <p class="feature-description">
+                                データベースの管理とシステム設定を行います。
+                            </p>
+                            <a href="${pageContext.request.contextPath}/StatusServlet?view=adminDatabase.jsp" class="feature-link">
+                                管理者DBを開く
+                            </a>
+                        </div>
+                    <% } %>
+
+                    <!-- 権限エラー表示 -->
+                    <% if (username != null && !("teacher".equals(role) || "headmaster".equals(role) || "egd".equals(role) || "admin".equals(role) || "student".equals(role))) { %>
+                        <div class="feature-card" style="background: #ffebee; border-left: 4px solid #f44336;">
+                            <span class="feature-icon">⚠️</span>
+                            <h3 class="feature-title">アクセスエラー</h3>
+                            <p class="feature-description">
+                                現在の権限では利用できる機能がありません。
+                                システム管理者にお問い合わせください。
+                            </p>
+                        </div>
                     <% } %>
                 </div>
             </div>
+        </section>
+        <!--▲▲▲▲▲ここまで「ダッシュボードメイン」-->
 
-            <!-- メインコンテンツ -->
-            <div class="dashboard-main">
-                
-                <!-- 学生管理機能 -->
-                <% if ("teacher".equals(role) || "headmaster".equals(role) || "admin".equals(role)) { %>
-                    <div class="feature-card">
-                        <span class="feature-icon">📚</span>
-                        <h3 class="feature-title">学生管理</h3>
-                        <p class="feature-description">
-                            学生の情報を管理し、就職活動の進捗を把握できます。
-                        </p>
-                        <a href="StatusServlet?view=studentManagement" class="feature-link">
-                            学生管理画面を開く
-                        </a>
-                    </div>
-                <% } %>
-
-                <!-- 企業管理機能 -->
-                <% if ("egd".equals(role) || "admin".equals(role)) { %>
-                    <div class="feature-card">
-                        <span class="feature-icon">🏢</span>
-                        <h3 class="feature-title">企業管理</h3>
-                        <p class="feature-description">
-                            企業情報の登録・編集と求人情報の管理を行います。
-                        </p>
-                        <a href="StatusServlet?view=CompanyManagement" class="feature-link">
-                            企業管理画面を開く
-                        </a>
-                    </div>
-                <% } %>
-
-                <!-- 就職管理機能 -->
-                <% if ("teacher".equals(role) || "headmaster".equals(role) || "egd".equals(role) || "admin".equals(role) || "student".equals(role)) { %>
-                    <div class="feature-card">
-                        <span class="feature-icon">📄</span>
-                        <h3 class="feature-title">就職管理</h3>
-                        <p class="feature-description">
-                            就職活動の進捗管理と選考状況の記録を行います。
-                        </p>
-                        <a href="StatusServlet?view=jobHunting" class="feature-link">
-                            就職管理画面を開く
-                        </a>
-                    </div>
-                <% } %>
-
-                <!-- 受験者一覧機能 -->
-                <% if ("teacher".equals(role) || "headmaster".equals(role) || "egd".equals(role) || "admin".equals(role)) { %>
-                    <div class="feature-card">
-                        <span class="feature-icon">📊</span>
-                        <h3 class="feature-title">受験者一覧</h3>
-                        <p class="feature-description">
-                            企業の選考に応募した学生の一覧と進捗を確認できます。
-                        </p>
-                        <a href="StatusServlet?view=applicantList" class="feature-link">
-                            受験者一覧を表示
-                        </a>
-                    </div>
-                <% } %>
-
-                <!-- 管理者DB機能 -->
-                <% if ("admin".equals(role)) { %>
-                    <div class="feature-card">
-                        <span class="feature-icon">🛠</span>
-                        <h3 class="feature-title">システム管理</h3>
-                        <p class="feature-description">
-                            データベースの管理とシステム設定を行います。
-                        </p>
-                        <a href="StatusServlet?view=adminDatabase.jsp" class="feature-link">
-                            管理者DBを開く
-                        </a>
-                    </div>
-                <% } %>
-
-                <!-- 権限エラー表示 -->
-                <% if (username != null && !("teacher".equals(role) || "headmaster".equals(role) || "egd".equals(role) || "admin".equals(role) || "student".equals(role))) { %>
-                    <div class="feature-card" style="background: #ffebee; border-left: 4px solid #f44336;">
-                        <span class="feature-icon">⚠️</span>
-                        <h3 class="feature-title">アクセスエラー</h3>
-                        <p class="feature-description">
-                            現在の権限では利用できる機能がありません。
-                            システム管理者にお問い合わせください。
-                        </p>
-                    </div>
-                <% } %>
+        <!--▼▼▼▼▼ここから「テキストスライドショー」-->
+        <div class="text-slide-wrapper">
+            <div class="text-slide">
+                <span>Job Management System</span>
             </div>
         </div>
+        <!--▲▲▲▲▲ここまで「テキストスライドショー」-->
+
+        <!--▼▼▼▼▼ここから「お知らせセクション」-->
+        <section class="bg3 bg-pattern3 arrow">
+            <div class="c2">
+                <div class="title">
+                    <h2>お知らせ<span>News</span></h2>
+                </div>
+                <div class="text">
+                    <dl class="new">
+                        <dt>2025/01/20<span>重要</span></dt>
+                        <dd>本年度の就職活動スケジュールが更新されました。2年次の自己分析ワークショップは1月25日に開催されます。詳細は教務部へお問い合わせください。</dd>
+
+                        <dt>2025/01/15<span class="icon-bg1">企業説明会</span></dt>
+                        <dd>県内外の主要企業による説明会が1月25日からスタートします。このアプリで予約が可能ですので、お早めに登録をしてください。</dd>
+
+                        <dt>2025/01/10<span class="icon-bg2">就職対策</span></dt>
+                        <dd>模擬面接セッションの追加開催が決定しました！1月20日から週ごとに行われます。JMSアプリを活用して予約が可能です。</dd>
+
+                        <dt>2025/01/05<span>その他</span></dt>
+                        <dd>今年度の就職活動用アプリの新機能について説明会を実施します。1月30日にオンラインで行いますので、詳細は教務部の通知をご確認ください。</dd>
+
+                        <dt>2025/01/01<span>重要</span></dt>
+                        <dd>内定承諾書の提出期限が近づいています。各自スケジュールを確認し、必要な書類を1月末までに提出してください。</dd>
+                    </dl>
+                </div>
+            </div>
+        </section>
+        <!--▲▲▲▲▲ここまで「お知らせセクション」-->
+
+        <!--▼▼▼▼▼ここから「クイックアクセス」-->
+        <section class="bg-primary-color">
+            <h2 class="c">クイックアクセス<span>Quick Access</span></h2>
+            <div class="list-c2">
+                <div class="list image1">
+                    <div class="text">
+                        <h4><span class="sub-text">お問い合わせ</span><span class="main-text">Contact</span></h4>
+                        <p class="btn1"><a href="extension.html">お問い合わせフォーム</a></p>
+                    </div>
+                </div>
+                <div class="list image2">
+                    <div class="text">
+                        <h4><span class="sub-text">資料請求</span><span class="main-text">Request</span></h4>
+                        <p class="btn1"><a href="extension.html">資料請求フォーム</a></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--▲▲▲▲▲ここまで「クイックアクセス」-->
     </main>
 
     <!--▼▼▼▼▼ここから「フッター」-->
@@ -421,22 +495,22 @@
         </div>
         <div>
             <ul>
-                <li><a href="index.html">ホーム</a></li>
+                <li><a href="javascript:void(0);" onclick="location.reload();">ホーム</a></li>
                 <!-- 権限に応じた機能リンク -->
                 <% if ("teacher".equals(role) || "headmaster".equals(role) || "admin".equals(role)) { %>
-                    <li><a href="StatusServlet?view=studentManagement">学生管理</a></li>
+                    <li><a href="${pageContext.request.contextPath}/StatusServlet?view=studentManagement">学生管理</a></li>
                 <% } %>
                 <% if ("egd".equals(role) || "admin".equals(role)) { %>
-                    <li><a href="StatusServlet?view=CompanyManagement">企業管理</a></li>
+                    <li><a href="${pageContext.request.contextPath}/StatusServlet?view=CompanyManagement">企業管理</a></li>
                 <% } %>
                 <% if ("teacher".equals(role) || "headmaster".equals(role) || "egd".equals(role) || "admin".equals(role) || "student".equals(role)) { %>
-                    <li><a href="StatusServlet?view=jobHunting">就職管理</a></li>
+                    <li><a href="${pageContext.request.contextPath}/StatusServlet?view=jobHunting">就職管理</a></li>
                 <% } %>
                 <% if ("teacher".equals(role) || "headmaster".equals(role) || "egd".equals(role) || "admin".equals(role)) { %>
-                    <li><a href="StatusServlet?view=applicantList">受験者一覧</a></li>
+                    <li><a href="${pageContext.request.contextPath}/StatusServlet?view=applicantList">受験者一覧</a></li>
                 <% } %>
                 <% if ("admin".equals(role)) { %>
-                    <li><a href="StatusServlet?view=adminDatabase.jsp">システム管理</a></li>
+                    <li><a href="${pageContext.request.contextPath}/StatusServlet?view=adminDatabase.jsp">システム管理</a></li>
                 <% } %>
                 <li><a href="extension.html">お問い合わせ</a></li>
             </ul>
@@ -468,26 +542,26 @@
     <p class="logo"><img src="images/logo.png" alt="Job Management System"></p>
     <nav>
         <ul>
-            <li><a href="index.html">ホーム</a></li>
+            <li><a href="javascript:void(0);" onclick="location.reload();">ホーム</a></li>
             <!-- 権限に応じた機能リンク -->
             <% if ("teacher".equals(role) || "headmaster".equals(role) || "admin".equals(role)) { %>
-                <li><a href="StatusServlet?view=studentManagement">学生管理</a></li>
+                <li><a href="${pageContext.request.contextPath}/StatusServlet?view=studentManagement">学生管理</a></li>
             <% } %>
             <% if ("egd".equals(role) || "admin".equals(role)) { %>
-                <li><a href="StatusServlet?view=CompanyManagement">企業管理</a></li>
+                <li><a href="${pageContext.request.contextPath}/StatusServlet?view=CompanyManagement">企業管理</a></li>
             <% } %>
             <% if ("teacher".equals(role) || "headmaster".equals(role) || "egd".equals(role) || "admin".equals(role) || "student".equals(role)) { %>
-                <li><a href="StatusServlet?view=jobHunting">就職管理</a></li>
+                <li><a href="${pageContext.request.contextPath}/StatusServlet?view=jobHunting">就職管理</a></li>
             <% } %>
             <% if ("teacher".equals(role) || "headmaster".equals(role) || "egd".equals(role) || "admin".equals(role)) { %>
-                <li><a href="StatusServlet?view=applicantList">受験者一覧</a></li>
+                <li><a href="${pageContext.request.contextPath}/StatusServlet?view=applicantList">受験者一覧</a></li>
             <% } %>
             <% if ("admin".equals(role)) { %>
-                <li><a href="StatusServlet?view=adminDatabase.jsp">システム管理</a></li>
+                <li><a href="${pageContext.request.contextPath}/StatusServlet?view=adminDatabase.jsp">システム管理</a></li>
             <% } %>
             <li><a href="extension.html">お問い合わせ</a></li>
             <% if (username != null) { %>
-                <li><a href="LogoutServlet">ログアウト</a></li>
+                <li><a href="${pageContext.request.contextPath}/LogoutServlet">ログアウト</a></li>
             <% } %>
         </ul>
     </nav>
