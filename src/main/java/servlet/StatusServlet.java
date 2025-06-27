@@ -34,46 +34,61 @@ public class StatusServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		String view = request.getParameter("view");
-        String nextPage = "/WEB-INF/jsp/status.jsp"; 
+		try {
+			String view = request.getParameter("view");
+	        String nextPage = "/WEB-INF/jsp/status.jsp"; 
 
-        if (view != null) {
-            switch (view) {
-                case "index":
-                    nextPage = "/WEB-INF/jsp/index.jsp";
-                    break;
-                case "1":
-                    nextPage = "/WEB-INF/jsp/1.jsp";
-                    break;
-                case "2":
-                    nextPage = "/WEB-INF/jsp/2.jsp";
-                    break;
-                case "3":
-                    nextPage = "/WEB-INF/jsp/3.jsp";
-                    break;
-                case "studentManagement":
-                    nextPage = "/WEB-INF/jsp/StudentManagement.jsp";
-                    break;
-                case "DashBoard":
-                    nextPage = "/WEB-INF/jsp/DashBoard.jsp";
-                    break;
-                case "jobHunting":
-                    nextPage = "/WEB-INF/jsp/jobHunting.jsp";
-                    break;
-                case "CompanyManagement":
-                    nextPage = "/WEB-INF/jsp/CompanyManagement.jsp";
-                    break;
-                case "applicantList":
-                    nextPage = "/WEB-INF/jsp/applicantList.jsp";
-                    break;
-                default:
-                    nextPage = "/index.jsp";
-                    break;
-            }
-        }
+	        // デバッグログ
+	        System.out.println("StatusServlet: view parameter = " + view);
+	        System.out.println("StatusServlet: request URI = " + request.getRequestURI());
+	        System.out.println("StatusServlet: context path = " + request.getContextPath());
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher(nextPage);
-        dispatcher.forward(request, response);
+	        if (view != null) {
+	            switch (view) {
+	                case "index":
+	                    nextPage = "/WEB-INF/jsp/index.jsp";
+	                    break;
+	                case "1":
+	                    nextPage = "/WEB-INF/jsp/1.jsp";
+	                    break;
+	                case "2":
+	                    nextPage = "/WEB-INF/jsp/2.jsp";
+	                    break;
+	                case "3":
+	                    nextPage = "/WEB-INF/jsp/3.jsp";
+	                    break;
+	                case "studentManagement":
+	                    nextPage = "/WEB-INF/jsp/StudentManagement.jsp";
+	                    break;
+	                case "DashBoard":
+	                    nextPage = "/WEB-INF/jsp/DashBoard.jsp";
+	                    break;
+	                case "jobHunting":
+	                    nextPage = "/WEB-INF/jsp/jobHunting.jsp";
+	                    break;
+	                case "CompanyManagement":
+	                    nextPage = "/WEB-INF/jsp/CompanyManagement.jsp";
+	                    break;
+	                case "applicantList":
+	                    nextPage = "/WEB-INF/jsp/applicantList.jsp";
+	                    break;
+	                default:
+	                    nextPage = "/index.jsp";
+	                    break;
+	            }
+	        }
+
+	        // デバッグログ
+	        System.out.println("StatusServlet: nextPage = " + nextPage);
+
+	        RequestDispatcher dispatcher = request.getRequestDispatcher(nextPage);
+	        dispatcher.forward(request, response);
+		} catch (Exception e) {
+			System.err.println("StatusServlet Error: " + e.getMessage());
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.getWriter().println("Error: " + e.getMessage());
+		}
     }
 
 	/**
