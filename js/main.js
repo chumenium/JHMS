@@ -27,7 +27,7 @@ var $headerNav = $('header nav');
 
 // menu
 $(window).on("load resize", debounce(function() {
-    if(window.innerWidth < 9999) {	// ここがブレイクポイント指定箇所です
+    if(window.innerWidth < 768) {	// レスポンシブブレイクポイントを適切な値に修正
         // 小さな端末用の処理
         $('body').addClass('small-screen').removeClass('large-screen');
         $menubar.addClass('display-none').removeClass('display-block');
@@ -41,7 +41,7 @@ $(window).on("load resize", debounce(function() {
         // ドロップダウンメニューが開いていれば、それを閉じる
         $('.ddmenu_parent > ul').hide();
     }
-}, 10));
+}, 250));
 
 $(function() {
 
