@@ -72,33 +72,16 @@ public class RegisterServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
         
+        // パラメータの取得
         String id = request.getParameter("id");
-        String username = request.getParameter("username");
         String password = request.getParameter("password");
-        String confirmPassword = request.getParameter("confirmPassword");
         String role = request.getParameter("role");
-
-        // 基本的なバリデーション
-        if (id == null || id.trim().isEmpty() || 
-            username == null || username.trim().isEmpty() ||
+        
+        // バリデーション
+        if (id == null || id.trim().isEmpty() ||
             password == null || password.trim().isEmpty() ||
             role == null || role.trim().isEmpty()) {
-            response.sendRedirect("register.html?error=" + 
-                java.net.URLEncoder.encode("すべての項目を入力してください", "UTF-8"));
-            return;
-        }
-
-        // パスワード確認
-        if (!password.equals(confirmPassword)) {
-            response.sendRedirect("register.html?error=" + 
-                java.net.URLEncoder.encode("パスワードが一致しません", "UTF-8"));
-            return;
-        }
-
-        // パスワード長チェック
-        if (password.length() < 6) {
-            response.sendRedirect("register.html?error=" + 
-                java.net.URLEncoder.encode("パスワードは6文字以上にしてください", "UTF-8"));
+            response.sendRedirect("register.html?error=invalid_input");
             return;
         }
 
@@ -122,13 +105,12 @@ public class RegisterServlet extends HttpServlet {
             String hashedPassword = hashPassword(password, salt);
 
             // ユーザー登録
-            String insertQuery = "INSERT INTO users (id, username, password, role, salt) VALUES (?, ?, ?, ?, ?)";
+            String insertQuery = "INSERT INTO users (id, password, role, salt) VALUES (?, ?, ?, ?)";
             PreparedStatement insertStmt = connection.prepareStatement(insertQuery);
             insertStmt.setString(1, id);
-            insertStmt.setString(2, username);
-            insertStmt.setString(3, hashedPassword);
-            insertStmt.setString(4, role);
-            insertStmt.setString(5, salt);
+            insertStmt.setString(2, hashedPassword);
+            insertStmt.setString(3, role);
+            insertStmt.setString(4, salt);
 
             int result = insertStmt.executeUpdate();
 

@@ -1,5 +1,17 @@
--- プルダウン用データベーステーブル作成スクリプト
+-- 学校サーバー用データベースセットアップスクリプト
 
+-- 1. データベースの作成
+CREATE DATABASE IF NOT EXISTS jms CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- 2. 専用ユーザーの作成
+CREATE USER 'jms_user'@'%' IDENTIFIED BY 'jms_password';
+GRANT ALL PRIVILEGES ON jms.* TO 'jms_user'@'%';
+FLUSH PRIVILEGES;
+
+-- 3. データベースの選択
+USE jms;
+
+-- 4. 既存のテーブル作成スクリプトを実行
 -- クラステーブル
 CREATE TABLE IF NOT EXISTS classes (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -28,14 +40,14 @@ CREATE TABLE IF NOT EXISTS industries (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 勤務地テーブル（StudentServletで参照されている）
+-- 勤務地テーブル
 CREATE TABLE IF NOT EXISTS work_place_tbl (
     id INT AUTO_INCREMENT PRIMARY KEY,
     work_place VARCHAR(100) NOT NULL UNIQUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 職種テーブル（StudentServletで参照されている）
+-- 職種テーブル
 CREATE TABLE IF NOT EXISTS occupations_tbl (
     occupation_id INT AUTO_INCREMENT PRIMARY KEY,
     occupation VARCHAR(100) NOT NULL UNIQUE,
@@ -43,7 +55,7 @@ CREATE TABLE IF NOT EXISTS occupations_tbl (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 学生テーブル（卒業年を取得するため）
+-- 学生テーブル
 CREATE TABLE IF NOT EXISTS students (
     id INT AUTO_INCREMENT PRIMARY KEY,
     student_id VARCHAR(20) NOT NULL UNIQUE,
@@ -64,7 +76,7 @@ CREATE TABLE IF NOT EXISTS students (
     FOREIGN KEY (first_choice_industry_id) REFERENCES industries(id)
 );
 
--- 学生テーブル（StudentServletで参照されている）
+-- 学生テーブル（StudentServlet用）
 CREATE TABLE IF NOT EXISTS students_tbl (
     student_id VARCHAR(20) PRIMARY KEY,
     department VARCHAR(10),
@@ -83,7 +95,7 @@ CREATE TABLE IF NOT EXISTS students_tbl (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- ユーザーテーブル（ログイン機能用）
+-- ユーザーテーブル
 CREATE TABLE IF NOT EXISTS users (
     id VARCHAR(8) PRIMARY KEY,
     password VARCHAR(255) NOT NULL,
@@ -93,59 +105,22 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 -- サンプルデータの挿入
-
--- クラスデータ
 INSERT IGNORE INTO classes (class_name) VALUES 
-('S3A1'),
-('S3A2'),
-('S3B1'),
-('S3B2'),
-('S2A1'),
-('S2A2'),
-('S2B1'),
-('S2B2');
+('S3A1'),('S3A2'),('S3B1'),('S3B2'),('S2A1'),('S2A2'),('S2B1'),('S2B2');
 
--- 在籍状況データ
 INSERT IGNORE INTO enrollment_status (status_name) VALUES 
-('在籍'),
-('休学'),
-('卒業'),
-('退学'),
-('除籍');
+('在籍'),('休学'),('卒業'),('退学'),('除籍');
 
--- 斡旋データ
 INSERT IGNORE INTO assistance_types (assistance_name) VALUES 
-('学校斡旋'),
-('自己応募'),
-('エージェント'),
-('紹介'),
-('その他');
+('学校斡旋'),('自己応募'),('エージェント'),('紹介'),('その他');
 
--- 業種データ
 INSERT IGNORE INTO industries (industry_name) VALUES 
-('IT・ソフトウェア'),
-('通信・インターネット'),
-('製造業'),
-('金融・保険'),
-('建設・不動産'),
-('小売・流通'),
-('医療・福祉'),
-('教育'),
-('公務員'),
-('その他');
+('IT・ソフトウェア'),('通信・インターネット'),('製造業'),('金融・保険'),
+('建設・不動産'),('小売・流通'),('医療・福祉'),('教育'),('公務員'),('その他');
 
--- 勤務地データ
 INSERT IGNORE INTO work_place_tbl (work_place) VALUES 
-('東京'),
-('大阪'),
-('名古屋'),
-('福岡'),
-('札幌'),
-('仙台'),
-('広島'),
-('その他');
+('東京'),('大阪'),('名古屋'),('福岡'),('札幌'),('仙台'),('広島'),('その他');
 
--- 職種データ
 INSERT IGNORE INTO occupations_tbl (occupation, industry_name) VALUES 
 ('システムエンジニア', 'IT・ソフトウェア'),
 ('プログラマー', 'IT・ソフトウェア'),
@@ -156,7 +131,6 @@ INSERT IGNORE INTO occupations_tbl (occupation, industry_name) VALUES
 ('事務職', 'その他'),
 ('企画職', 'その他');
 
--- サンプル学生データ（卒業年データのため）
 INSERT IGNORE INTO students (student_id, name, name_kana, graduation_year) VALUES 
 ('2023001', '山田太郎', 'ヤマダタロウ', 2025),
 ('2023002', '佐藤花子', 'サトウハナコ', 2025),
@@ -164,26 +138,12 @@ INSERT IGNORE INTO students (student_id, name, name_kana, graduation_year) VALUE
 ('2023004', '鈴木美咲', 'スズキミサキ', 2026),
 ('2023005', '高橋健一', 'タカハシケンイチ', 2025);
 
--- サンプルユーザーデータ（ログイン機能用）
 INSERT IGNORE INTO users (id, password, role, salt) VALUES 
-('admin', 'admin123', 'admin', 'salt123'),
-('teacher', 'teacher123', 'teacher', 'salt456'),
-('student', 'student123', 'student', 'salt789'),
-('test', 'test123', 'student', 'testsalt');
+('admin', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 'admin', 'salt123'),
+('teacher', '9d6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 'teacher', 'salt456'),
+('student', 'ae6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 'student', 'salt789'),
+('test', 'bf6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 'student', 'testsalt'),
+('demo', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', 'student', 'demosalt');
 
--- テスト用ユーザー（確実にログインできるように）
-INSERT IGNORE INTO users (id, password, role, salt) VALUES 
-('demo', 'demo123', 'student', 'demosalt');
-
--- 正確なハッシュ化されたパスワードに更新
--- 以下のハッシュ値は、LoginServletのhashPasswordメソッドで計算された値です
--- admin123 + salt123 のSHA-256ハッシュ
-UPDATE users SET password = '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918' WHERE id = 'admin';
--- teacher123 + salt456 のSHA-256ハッシュ  
-UPDATE users SET password = '9d6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918' WHERE id = 'teacher';
--- student123 + salt789 のSHA-256ハッシュ
-UPDATE users SET password = 'ae6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918' WHERE id = 'student';
--- test123 + testsalt のSHA-256ハッシュ
-UPDATE users SET password = 'bf6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918' WHERE id = 'test';
--- demo123 + demosalt のSHA-256ハッシュ
-UPDATE users SET password = '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8' WHERE id = 'demo'; 
+-- 完了メッセージ
+SELECT '学校サーバー用データベースセットアップが完了しました。' AS message; 

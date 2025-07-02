@@ -36,12 +36,33 @@ public class StatusServlet extends HttpServlet {
 			throws ServletException, IOException {
 		try {
 			String view = request.getParameter("view");
+			if (view == null) {
+				view = request.getParameter("status");
+			}
 	        String nextPage = "/WEB-INF/jsp/status.jsp"; 
 
 	        // デバッグログ
 	        System.out.println("StatusServlet: view parameter = " + view);
 	        System.out.println("StatusServlet: request URI = " + request.getRequestURI());
 	        System.out.println("StatusServlet: context path = " + request.getContextPath());
+
+	        // セッション情報のデバッグ
+	        jakarta.servlet.http.HttpSession session = request.getSession(false);
+	        if (session != null) {
+	            String username = (String) session.getAttribute("username");
+	            String role = (String) session.getAttribute("role");
+	            String id = (String) session.getAttribute("id");
+	            System.out.println("StatusServlet: session username = " + username);
+	            System.out.println("StatusServlet: session role = " + role);
+	            System.out.println("StatusServlet: session id = " + id);
+	        } else {
+	            System.out.println("StatusServlet: session is null");
+	        }
+
+	        java.util.Map<String, String[]> paramMap = request.getParameterMap();
+	        for (String key : paramMap.keySet()) {
+	            System.out.println("StatusServlet: param " + key + " = " + java.util.Arrays.toString(paramMap.get(key)));
+	        }
 
 	        if (view != null) {
 	            switch (view) {
@@ -71,6 +92,12 @@ public class StatusServlet extends HttpServlet {
 	                    break;
 	                case "applicantList":
 	                    nextPage = "/WEB-INF/jsp/applicantList.jsp";
+	                    break;
+	                case "studentList":
+	                    nextPage = "/WEB-INF/jsp/StudentList.jsp";
+	                    break;
+	                case "createStudent":
+	                    nextPage = "/WEB-INF/jsp/CreateStudent.jsp";
 	                    break;
 	                default:
 	                    nextPage = "/index.jsp";

@@ -42,6 +42,16 @@
   </servlet-mapping>
 
   <servlet>
+    <servlet-name>StudentServlet</servlet-name>
+    <servlet-class>servlet.StudentServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>StudentServlet</servlet-name>
+    <url-pattern>/StudentServlet</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
     <servlet-name>LoginServlet</servlet-name>
     <servlet-class>servlet.LoginServlet</servlet-class>
   </servlet>
@@ -69,6 +79,16 @@
   <servlet-mapping>
     <servlet-name>LogoutServlet</servlet-name>
     <url-pattern>/LogoutServlet</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>DashboardRedirectServlet</servlet-name>
+    <servlet-class>servlet.DashboardRedirectServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>DashboardRedirectServlet</servlet-name>
+    <url-pattern>/DashboardRedirectServlet</url-pattern>
   </servlet-mapping>
   
 </web-app>

@@ -189,20 +189,7 @@
           <path stroke-linecap="round" stroke-width="1.5" stroke="currentColor"
                 d="M5 20C5 17.2386 8.13401 15 12 15C15.866 15 19 17.2386 19 20" />
         </svg>
-        <input required placeholder="ユーザーID" class="form-input" type="text" name="id" id="userId">
-      </div>
-    </div>
-
-    <!-- ユーザー名 -->
-    <div class="input-group">
-      <div class="input-wrapper">
-        <svg fill="none" viewBox="0 0 24 24" class="input-icon">
-          <path stroke-width="1.5" stroke="currentColor"
-                d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z"/>
-          <path stroke-width="1.5" stroke="currentColor"
-                d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z"/>
-        </svg>
-        <input required placeholder="ユーザー名" class="form-input" type="text" name="username">
+        <input required placeholder="ID" class="form-input" type="text" name="id">
       </div>
     </div>
 
@@ -244,20 +231,24 @@
       </div>
     </div>
 
-    <!-- ロール選択 -->
+    <!-- 権限選択 -->
     <div class="input-group">
       <div class="input-wrapper">
         <svg fill="none" viewBox="0 0 24 24" class="input-icon">
-          <path stroke-width="1.5" stroke="currentColor"
-                d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"/>
+          <path stroke-width="1.5" stroke="currentColor" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z"/>
+          <path stroke-width="1.5" stroke="currentColor" d="M4 20c0-2.21 3.58-4 8-4s8 1.79 8 4"/>
         </svg>
-        <select required class="role-select" name="role">
-          <option value="">ロールを選択してください</option>
-          <option value="student">学生</option>
-          <option value="teacher">教師</option>
+        <select required name="role" id="role" class="role-select">
+          <option value="">権限を選択してください</option>
+          <option value="teacher">教員</option>
+          <option value="headmaster">校長</option>
+          <option value="egd">就職担当</option>
           <option value="admin">管理者</option>
         </select>
       </div>
+    </div>
+    <div style="color:#e57373; font-size:0.95em; margin-bottom:1.5rem;">
+      ※学生の新規登録は管理者が行います。学生はこの画面から登録できません。
     </div>
 
     <button class="submit-button" type="submit">
@@ -319,7 +310,7 @@
 
       // ロール選択のバリデーション
       if (!role) {
-        alert('ロールを選択してください');
+        alert('権限を選択してください');
         return false;
       }
 

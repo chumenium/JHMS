@@ -34,23 +34,34 @@
 <link rel="stylesheet" href="css/style.css">
 
 <style>
-    /* ダッシュボード全体 */
-    .dashboard-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
-        min-height: 100vh;
+    /* システム上見やすさを追求したダッシュボードデザイン */
+    
+    /* 全体の設定 */
+    .dashboard-page {
+        background: #f8f9fa;
+        color: #2c3e50;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
     }
 
-    /* ヘッダー */
+    /* ダッシュボード全体 */
+    .dashboard-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 24px;
+        min-height: 100vh;
+        background: #ffffff;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+    }
+
+    /* ヘッダー - 視認性向上 */
     .dashboard-header {
-        background: rgba(255, 255, 255, 0.95);
-        border-radius: 15px;
-        padding: 20px;
-        margin-bottom: 30px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: linear-gradient(135deg, #2C7744 0%, #5CA564 100%);
+        border-radius: 12px;
+        padding: 32px;
+        margin-bottom: 32px;
+        box-shadow: 0 4px 20px rgba(44, 119, 68, 0.15);
+        color: white;
     }
 
     .user-info {
@@ -58,80 +69,85 @@
         justify-content: space-between;
         align-items: center;
         flex-wrap: wrap;
-        gap: 15px;
+        gap: 20px;
     }
 
     .user-welcome {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 16px;
     }
 
     .user-avatar {
-        width: 50px;
-        height: 50px;
+        width: 64px;
+        height: 64px;
         border-radius: 50%;
-        background: linear-gradient(45deg, #2C7744, #5CA564);
+        background: rgba(255, 255, 255, 0.2);
         display: flex;
         align-items: center;
         justify-content: center;
         color: white;
-        font-weight: bold;
-        font-size: 20px;
+        font-weight: 600;
+        font-size: 24px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
     }
 
     .user-details h2 {
-        margin: 0;
-        color: #333;
-        font-size: 1.5rem;
+        margin: 0 0 8px 0;
+        color: white;
+        font-size: 28px;
+        font-weight: 600;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     }
 
     .role-badge {
-        background: linear-gradient(45deg, #2C7744, #5CA564);
+        background: rgba(255, 255, 255, 0.2);
         color: white;
-        padding: 5px 15px;
+        padding: 8px 16px;
         border-radius: 20px;
-        font-size: 0.9rem;
-        font-weight: bold;
-        text-transform: uppercase;
+        font-size: 14px;
+        font-weight: 600;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(10px);
     }
 
     .logout-btn {
-        background: #ff4757;
+        background: rgba(255, 255, 255, 0.15);
         color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 25px;
+        padding: 12px 24px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 8px;
         cursor: pointer;
-        font-weight: bold;
-        transition: all 0.3s ease;
+        font-weight: 600;
+        font-size: 16px;
+        transition: all 0.2s ease;
         text-decoration: none;
         display: inline-block;
+        backdrop-filter: blur(10px);
     }
 
     .logout-btn:hover {
-        background: #ff3742;
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(255, 71, 87, 0.3);
+        background: rgba(255, 255, 255, 0.25);
+        border-color: rgba(255, 255, 255, 0.5);
+        transform: translateY(-1px);
     }
 
-    /* メインコンテンツ */
+    /* メインコンテンツ - 情報階層の改善 */
     .dashboard-main {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 25px;
-        margin-bottom: 30px;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 24px;
+        margin-bottom: 32px;
     }
 
-    /* 機能カード */
+    /* 機能カード - 視認性と操作性の向上 */
     .feature-card {
-        background: rgba(255, 255, 255, 0.95);
-        border-radius: 15px;
-        padding: 25px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        transition: all 0.3s ease;
+        background: white;
+        border-radius: 12px;
+        padding: 32px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        border: 1px solid #e9ecef;
+        transition: all 0.2s ease;
         position: relative;
         overflow: hidden;
     }
@@ -143,87 +159,70 @@
         left: 0;
         right: 0;
         height: 4px;
-        background: linear-gradient(45deg, #2C7744, #5CA564);
+        background: linear-gradient(90deg, #2C7744, #5CA564);
     }
 
     .feature-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        border-color: #2C7744;
     }
 
     .feature-icon {
-        font-size: 3rem;
-        margin-bottom: 15px;
+        font-size: 48px;
+        margin-bottom: 20px;
         display: block;
+        opacity: 0.9;
     }
 
     .feature-title {
-        font-size: 1.3rem;
-        font-weight: bold;
-        color: #333;
-        margin-bottom: 10px;
+        font-size: 20px;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 12px;
+        line-height: 1.3;
     }
 
     .feature-description {
-        color: #666;
-        margin-bottom: 20px;
-        line-height: 1.5;
+        color: #6c757d;
+        margin-bottom: 24px;
+        line-height: 1.6;
+        font-size: 16px;
     }
 
     .feature-link {
-        background: linear-gradient(45deg, #2C7744, #5CA564);
+        background: linear-gradient(135deg, #2C7744 0%, #5CA564 100%);
         color: white;
-        padding: 12px 25px;
-        border-radius: 25px;
+        padding: 14px 28px;
+        border-radius: 8px;
         text-decoration: none;
-        font-weight: bold;
+        font-weight: 600;
+        font-size: 16px;
         display: inline-block;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
         border: none;
         cursor: pointer;
         width: 100%;
         text-align: center;
         box-sizing: border-box;
+        box-shadow: 0 2px 8px rgba(44, 119, 68, 0.2);
     }
 
     .feature-link:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(44, 119, 68, 0.3);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 15px rgba(44, 119, 68, 0.3);
         color: white;
         text-decoration: none;
     }
 
-    /* テキストスライドショー用の調整 */
-    .dashboard-page .text-slide-wrapper {
-        margin-top: 0;
-        margin-bottom: 0;
-    }
-
-    .dashboard-page .text-slide {
-        font-size: 8vw;
-        opacity: 0.08;
-    }
-
-    /* ダッシュボード用ヘッダー調整 */
-    .dashboard-page header {
-        position: relative;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .dashboard-page #mainimg {
-        display: none;
-    }
-
-    .dashboard-page main {
-        margin-top: 0;
-    }
-
-    /* レスポンシブ対応 */
+    /* レスポンシブ対応の強化 */
     @media (max-width: 768px) {
         .dashboard-container {
-            padding: 10px;
+            padding: 16px;
+        }
+        
+        .dashboard-header {
+            padding: 24px;
         }
         
         .user-info {
@@ -231,20 +230,105 @@
             text-align: center;
         }
         
+        .user-details h2 {
+            font-size: 24px;
+        }
+        
         .dashboard-main {
             grid-template-columns: 1fr;
+            gap: 16px;
         }
-
-        .dashboard-page .text-slide {
-            font-size: 12vw;
+        
+        .feature-card {
+            padding: 24px;
+        }
+        
+        .feature-title {
+            font-size: 18px;
         }
     }
 
-    /* アニメーション */
+    @media (max-width: 480px) {
+        .dashboard-container {
+            padding: 12px;
+        }
+        
+        .dashboard-header {
+            padding: 20px;
+        }
+        
+        .user-avatar {
+            width: 56px;
+            height: 56px;
+            font-size: 20px;
+        }
+        
+        .user-details h2 {
+            font-size: 20px;
+        }
+        
+        .feature-card {
+            padding: 20px;
+        }
+    }
+
+    /* アクセシビリティの向上 */
+    .feature-link:focus {
+        outline: 3px solid #2C7744;
+        outline-offset: 2px;
+    }
+
+    .feature-card:focus-within {
+        outline: 2px solid #2C7744;
+        outline-offset: 2px;
+    }
+
+    /* 高コントラストモード対応 */
+    @media (prefers-contrast: high) {
+        .feature-card {
+            border: 2px solid #2c3e50;
+        }
+        
+        .feature-link {
+            border: 2px solid #2c3e50;
+        }
+    }
+
+    /* ダークモード対応 */
+    @media (prefers-color-scheme: dark) {
+        .dashboard-page {
+            background: #1a1a1a;
+            color: #ffffff;
+        }
+        
+        .dashboard-container {
+            background: #2d2d2d;
+        }
+        
+        .feature-card {
+            background: #3d3d3d;
+            border-color: #4d4d4d;
+            color: #ffffff;
+        }
+        
+        .feature-title {
+            color: #ffffff;
+        }
+        
+        .feature-description {
+            color: #cccccc;
+        }
+    }
+
+    /* アニメーションの最適化 */
+    .feature-card {
+        animation: fadeInUp 0.4s ease forwards;
+    }
+
     @keyframes fadeInUp {
         from {
             opacity: 0;
-            transform: translateY(30px);
+            transform: translateY(20px);
         }
         to {
             opacity: 1;
@@ -252,15 +336,57 @@
         }
     }
 
-    .feature-card {
-        animation: fadeInUp 0.6s ease forwards;
+    /* ローディング画面の最適化 */
+    .dashboard-loading {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(44, 119, 68, 0.95);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        opacity: 1;
+        transition: opacity 0.3s ease-in-out;
     }
 
-    .feature-card:nth-child(1) { animation-delay: 0.1s; }
-    .feature-card:nth-child(2) { animation-delay: 0.2s; }
-    .feature-card:nth-child(3) { animation-delay: 0.3s; }
-    .feature-card:nth-child(4) { animation-delay: 0.4s; }
-    .feature-card:nth-child(5) { animation-delay: 0.5s; }
+    .dashboard-loading.fade-out {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .dashboard-loading-container {
+        text-align: center;
+        color: white;
+    }
+
+    .dashboard-loading-spinner {
+        width: 60px;
+        height: 60px;
+        border: 4px solid rgba(255, 255, 255, 0.2);
+        border-top: 4px solid white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 20px;
+    }
+
+    .dashboard-loading-text {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .dashboard-loading-subtext {
+        font-size: 14px;
+        opacity: 0.8;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
 </style>
 </head>
 
@@ -280,6 +406,15 @@
     default: roleDisplay = role; break;
   }
 %>
+
+<!-- ダッシュボードローディング画面 -->
+<div id="dashboardLoading" class="dashboard-loading">
+    <div class="dashboard-loading-container">
+        <div class="dashboard-loading-spinner"></div>
+        <div class="dashboard-loading-text">ダッシュボードを読み込み中...</div>
+        <div class="dashboard-loading-subtext">しばらくお待ちください</div>
+    </div>
+</div>
 
 <div id="container">
     <!--▼▼▼▼▼ここから「ヘッダー」-->
@@ -315,7 +450,7 @@
 
     <main>
         <!--▼▼▼▼▼ここから「ダッシュボードメイン」-->
-        <section class="bg1 bg-pattern1">
+        <section class="bg1 bg-pattern1" role="main" aria-label="ダッシュボードメイン">
             <div class="dashboard-container">
                 <!-- ダッシュボードヘッダー -->
                 <div class="dashboard-header">
@@ -336,7 +471,7 @@
                 </div>
 
                 <!-- メインコンテンツ -->
-                <div class="dashboard-main">
+                <div class="dashboard-main" role="region" aria-label="機能メニュー">
                     
                     <!-- 学生管理機能 -->
                     <% if ("teacher".equals(role) || "headmaster".equals(role) || "admin".equals(role)) { %>
@@ -423,14 +558,6 @@
             </div>
         </section>
         <!--▲▲▲▲▲ここまで「ダッシュボードメイン」-->
-
-        <!--▼▼▼▼▼ここから「テキストスライドショー」-->
-        <div class="text-slide-wrapper">
-            <div class="text-slide">
-                <span>Job Management System</span>
-            </div>
-        </div>
-        <!--▲▲▲▲▲ここまで「テキストスライドショー」-->
 
         <!--▼▼▼▼▼ここから「お知らせセクション」-->
         <section class="bg3 bg-pattern3 arrow">
@@ -524,14 +651,6 @@
 </div>
 <!--/#container-->
 
-<!--ローディング-->
-<div id="loading">
-    <img src="images/logo.png" alt="Loading">
-    <div class="progress-container">
-        <div class="progress-bar"></div>
-    </div>
-</div>
-
 <!--開閉ボタン（ハンバーガーアイコン）-->
 <div id="menubar_hdr">
     <span></span><span></span><span></span>
@@ -575,6 +694,69 @@
 <script src="js/jquery.inview_set.js"></script>
 <!--このテンプレート専用のスクリプト-->
 <script src="js/main.js"></script>
+
+<script>
+// 最適化されたダッシュボードローディング制御
+document.addEventListener('DOMContentLoaded', () => {
+    // ローディング時間を0.5秒に短縮
+    setTimeout(() => {
+        const loadingElement = document.getElementById('dashboardLoading');
+        if (loadingElement) {
+            loadingElement.classList.add('fade-out');
+            // フェードアウト完了後に要素を削除
+            setTimeout(() => {
+                loadingElement.remove();
+            }, 300);
+        }
+    }, 500);
+});
+
+// アクセシビリティの向上
+document.addEventListener('DOMContentLoaded', () => {
+    // キーボードナビゲーションの改善
+    const featureLinks = document.querySelectorAll('.feature-link');
+    featureLinks.forEach(link => {
+        link.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                link.click();
+            }
+        });
+    });
+
+    // フォーカス管理の改善
+    const focusableElements = document.querySelectorAll('a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    focusableElements.forEach(element => {
+        element.addEventListener('focus', () => {
+            element.style.outline = '2px solid #2C7744';
+            element.style.outlineOffset = '2px';
+        });
+        
+        element.addEventListener('blur', () => {
+            element.style.outline = '';
+            element.style.outlineOffset = '';
+        });
+    });
+});
+
+// パフォーマンス最適化
+window.addEventListener('load', () => {
+    // 画像の遅延読み込み
+    const images = document.querySelectorAll('img[data-src]');
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                img.src = img.dataset.src;
+                img.removeAttribute('data-src');
+                observer.unobserve(img);
+            }
+        });
+    });
+
+    images.forEach(img => imageObserver.observe(img));
+});
+</script>
 
 </body>
 </html>
