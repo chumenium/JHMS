@@ -20,7 +20,7 @@ public class DropdownDataDAO {
             while (rs.next()) {
                 classes.add(rs.getString("department") + " " + rs.getString("class"));
             }
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         return classes;
@@ -35,7 +35,7 @@ public class DropdownDataDAO {
             while (rs.next()) {
                 statuses.add(rs.getString("enrollment_status"));
             }
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         return statuses;
@@ -58,7 +58,7 @@ public class DropdownDataDAO {
             while (rs.next()) {
                 industries.add(rs.getString("industry_name"));
             }
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         return industries;
@@ -73,7 +73,7 @@ public class DropdownDataDAO {
             while (rs.next()) {
                 years.add(rs.getInt("graduation_year"));
             }
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         return years;

@@ -396,9 +396,7 @@ h1 {
    *-->
   <% if (username != null) { %>
     <li>
-      <a href="LogoutServlet">
-        🚪 ログアウト
-      </a>
+      <a href="${pageContext.request.contextPath}/LogoutServlet">ログアウト</a>
     </li>
   <% } %>
 </ul>

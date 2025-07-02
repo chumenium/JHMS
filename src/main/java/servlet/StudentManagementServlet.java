@@ -16,7 +16,7 @@ import dao.DropdownDataDAO;
 /**
  * Servlet implementation class StudentManagementServlet
  */
-@WebServlet("/StudentManagementServlet")
+
 public class StudentManagementServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        

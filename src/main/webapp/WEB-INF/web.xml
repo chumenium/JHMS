@@ -4,6 +4,22 @@
          xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
          version="6.0">
   
+  <!-- エラーページの設定 -->
+  <error-page>
+    <error-code>404</error-code>
+    <location>/error/404.html</location>
+  </error-page>
+  
+  <error-page>
+    <error-code>403</error-code>
+    <location>/error/403.html</location>
+  </error-page>
+  
+  <error-page>
+    <error-code>500</error-code>
+    <location>/error/500.html</location>
+  </error-page>
+  
   <!-- StudentManagementServlet のマッピング -->
   <servlet>
     <servlet-name>StudentManagementServlet</servlet-name>
@@ -26,6 +42,16 @@
   </servlet-mapping>
 
   <servlet>
+    <servlet-name>StudentServlet</servlet-name>
+    <servlet-class>servlet.StudentServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>StudentServlet</servlet-name>
+    <url-pattern>/StudentServlet</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
     <servlet-name>LoginServlet</servlet-name>
     <servlet-class>servlet.LoginServlet</servlet-class>
   </servlet>
@@ -36,6 +62,16 @@
   </servlet-mapping>
   
   <servlet>
+    <servlet-name>RegisterServlet</servlet-name>
+    <servlet-class>servlet.RegisterServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>RegisterServlet</servlet-name>
+    <url-pattern>/RegisterServlet</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
     <servlet-name>LogoutServlet</servlet-name>
     <servlet-class>servlet.LogoutServlet</servlet-class>
   </servlet>
@@ -43,6 +79,16 @@
   <servlet-mapping>
     <servlet-name>LogoutServlet</servlet-name>
     <url-pattern>/LogoutServlet</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>DashboardRedirectServlet</servlet-name>
+    <servlet-class>servlet.DashboardRedirectServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>DashboardRedirectServlet</servlet-name>
+    <url-pattern>/DashboardRedirectServlet</url-pattern>
   </servlet-mapping>
   
 </web-app>
