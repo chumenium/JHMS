@@ -243,18 +243,41 @@ public class StudentServlet extends HttpServlet {
 
             //-------------------------------完成-------------------------------
             } else if ("delete".equals(action)) {
-                // 学生情報を削除する（`studentClass` で削除）
+                // 学生情報を削除する（トランザクションを使用してusersテーブルからも削除）
             	String student_id = request.getParameter("student_id");
 
-                String sql = "DELETE FROM students_tbl WHERE student_id = ?";
-                PreparedStatement stmt = conn.prepareStatement(sql);
-                stmt.setString(1, student_id);
-                int rowsInserted1 = stmt.executeUpdate();
-                if (rowsInserted1 > 0) {
-                	//データ更新成功
-                	request.getRequestDispatcher("/WEB-INF/jsp/StudentManagement.jsp").forward(request, response);
-                } else {
-                    //データ更新失敗
+                try {
+                    conn.setAutoCommit(false);
+                    
+                    // まずstudents_tblから削除
+                    String sql1 = "DELETE FROM students_tbl WHERE student_id = ?";
+                    PreparedStatement stmt1 = conn.prepareStatement(sql1);
+                    stmt1.setString(1, student_id);
+                    int rowsDeleted1 = stmt1.executeUpdate();
+                    
+                    // 次にusersテーブルからも削除
+                    String sql2 = "DELETE FROM users WHERE id = ?";
+                    PreparedStatement stmt2 = conn.prepareStatement(sql2);
+                    stmt2.setString(1, student_id);
+                    int rowsDeleted2 = stmt2.executeUpdate();
+                    
+                    if (rowsDeleted1 > 0 && rowsDeleted2 > 0) {
+                        conn.commit();
+                        //データ削除成功
+                        request.getRequestDispatcher("/WEB-INF/jsp/StudentManagement.jsp").forward(request, response);
+                    } else {
+                        conn.rollback();
+                        //データ削除失敗
+                        request.setAttribute("errorMessage", "学生の削除に失敗しました。");
+                        request.getRequestDispatcher("/WEB-INF/jsp/StudentManagement.jsp").forward(request, response);
+                    }
+                } catch (Exception e) {
+                    conn.rollback();
+                    e.printStackTrace();
+                    request.setAttribute("errorMessage", "削除処理中にエラーが発生しました: " + e.getMessage());
+                    request.getRequestDispatcher("/WEB-INF/jsp/StudentManagement.jsp").forward(request, response);
+                } finally {
+                    conn.setAutoCommit(true);
                 }
             
                 
@@ -419,44 +442,35 @@ public class StudentServlet extends HttpServlet {
                 
                 PreparedStatement stmt = conn.prepareStatement(sql);
 
-
-    	        if(graduation_year != null && !graduation_year.trim().isEmpty()) {
-    	        	stmt.setInt(i, Integer.parseInt(graduation_year));
-    	        	i--;
-    	        }
-    	        if(desired_job_type_1st != null && !desired_job_type_1st.trim().isEmpty()) {
-    	        	stmt.setInt(i, Integer.parseInt(desired_job_type_1st));
-    	        	i--;
-    	        }
-    	        if(mediation_status != null && !mediation_status.trim().isEmpty()) {
-    	        	stmt.setString(i, mediation_status);
-    	        	i--;
-    	        }
-    	        if(enrollment_status != null && !enrollment_status.trim().isEmpty()) {
-    	        	stmt.setString(i, enrollment_status);
-    	        	i--;
-    	        }
-    	        if(gender != null && !gender.trim().isEmpty()) {
-    	        	stmt.setString(i, gender);
-    	        	i--;
-    	        }
-    	        if(name_reading != null && !name_reading.trim().isEmpty()) {
-    	        	stmt.setString(i, name_reading);
-    	        	i--;
-    	        }
-    	        if(number != null && !number.trim().isEmpty()) {
-    	        	stmt.setString(i, number);
-    	        	i--;
+                // パラメータを正しい順序で設定
+                int paramIndex = 1;
+    	        if(student_id != null && !student_id.trim().isEmpty()) {
+    	        	stmt.setString(paramIndex++, student_id);
     	        }
     	        if(student_class != null && !student_class.trim().isEmpty()) {
-    	        	stmt.setString(i, studentClass);
-    	        	stmt.setString(i, department);
-    	        	i--;
-    	        	i--;
+    	        	stmt.setString(paramIndex++, department);
+    	        	stmt.setString(paramIndex++, studentClass);
     	        }
-    	        if(student_id != null && !student_id.trim().isEmpty()) {
-    	        	stmt.setString(i, student_id);
-    	        	i--;
+    	        if(number != null && !number.trim().isEmpty()) {
+    	        	stmt.setString(paramIndex++, number);
+    	        }
+    	        if(name_reading != null && !name_reading.trim().isEmpty()) {
+    	        	stmt.setString(paramIndex++, name_reading);
+    	        }
+    	        if(gender != null && !gender.trim().isEmpty()) {
+    	        	stmt.setString(paramIndex++, gender);
+    	        }
+    	        if(enrollment_status != null && !enrollment_status.trim().isEmpty()) {
+    	        	stmt.setString(paramIndex++, enrollment_status);
+    	        }
+    	        if(mediation_status != null && !mediation_status.trim().isEmpty()) {
+    	        	stmt.setString(paramIndex++, mediation_status);
+    	        }
+    	        if(desired_job_type_1st != null && !desired_job_type_1st.trim().isEmpty()) {
+    	        	stmt.setInt(paramIndex++, Integer.parseInt(desired_job_type_1st));
+    	        }
+    	        if(graduation_year != null && !graduation_year.trim().isEmpty()) {
+    	        	stmt.setInt(paramIndex++, Integer.parseInt(graduation_year));
     	        }
                 
                 ResultSet rs = stmt.executeQuery();
